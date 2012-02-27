@@ -12,9 +12,17 @@ namespace UOProxy.Packets.FromClient
         public int FastWalkPreventionKey;
         public _0x02MoveRequest(byte[] data) : base(data)
         {
-            this.Direction = Data.ReadBit();
-            this.SequenceNumber = Data.ReadBit();
-            this.FastWalkPreventionKey = Data.ReadInt();
+            try
+            {
+                this.Direction = Data.ReadBit();
+                this.SequenceNumber = Data.ReadBit();
+                this.FastWalkPreventionKey = Data.ReadInt();
+            }
+            catch
+            {
+
+            }
+            
         }
 
         public _0x02MoveRequest(byte Direction,byte SeqNumber,int FastWalkKey,bool Run) : base(0x02)

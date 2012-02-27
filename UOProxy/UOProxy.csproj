@@ -31,6 +31,12 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="OpenUO.Core">
+      <HintPath>..\..\..\..\..\Desktop\openuo\openuo\trunk\src\OpenUO.Ultima.Network\bin\Debug\OpenUO.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="OpenUO.Ultima.Network">
+      <HintPath>..\..\..\..\..\Desktop\openuo\openuo\trunk\src\OpenUO.Ultima.Network\bin\Debug\OpenUO.Ultima.Network.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -41,7 +47,16 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Class1.cs" />
+    <Compile Include="Huffman.cs" />
+    <Compile Include="Logger.cs" />
+    <Compile Include="Packets\FromClient\0x02MoveRequest.cs" />
+    <Compile Include="Packets\Packet.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UOStream.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Packets\FromBoth\" />
+    <Folder Include="Packets\FromServer\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

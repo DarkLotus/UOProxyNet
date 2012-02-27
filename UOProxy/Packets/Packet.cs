@@ -24,5 +24,6 @@ namespace UOProxy.Packets
             Data = new UOStream();
             Data.WriteByte(OpCode);
         }
+        public byte[] PacketData { get { return Data.ToArray(); } }
     }
 }

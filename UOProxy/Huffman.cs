@@ -5,12 +5,8 @@ using System.Text;
 
 namespace UOProxy
 {
-    public interface IDecompression
-    {
-        void DecompressAll(ref byte[] src, int src_size, ref byte[] dest, ref int dest_size);
-        bool DecompressOnePacket(ref byte[] src, int src_size, ref byte[] dest, ref int dest_size);
-    }
-    public class HuffmanDecompression : IDecompression
+
+    public class HuffmanDecompression
     {
         #region Decompression Tree
         static int[,] dec_tree = new int[256, 2]

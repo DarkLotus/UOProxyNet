@@ -10,9 +10,9 @@ namespace UOProxy.Packets
     {
         public UOStream Data;
         public byte OpCode;
-        public Packet(byte[] data)
+        public Packet(UOStream data)
         {
-            this.Data = new UOStream(data);
+            this.Data = data;
             this.OpCode = this.Data.ReadBit();
         }
         public Packet()

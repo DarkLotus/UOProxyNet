@@ -10,7 +10,11 @@ namespace UOProxy
         public static List<string> MsgLog = new List<string>();
         public static void Log(string msg)
         {
-            MsgLog.Add(msg);
+            lock (MsgLog)
+            {
+                MsgLog.Add(msg);
+            }
+            
         }
     }
 }

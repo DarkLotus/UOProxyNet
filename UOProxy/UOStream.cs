@@ -72,6 +72,15 @@ namespace UOProxy
             return (short)(results[0] << 8 | results[1]);
         }
 
+        public string Read30CharString()
+        {
+            char[] mystring = new char[30];
+            for (int i = 0; i < 30; i++)
+            {
+                mystring[i] = (char)this.ReadBit();
+            }
+            return new string(mystring);
+        }
         public string ReadString()
         {
             byte current;

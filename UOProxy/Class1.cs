@@ -8,19 +8,22 @@ using System.Threading;
 
 namespace UOProxy
 {
-    public class UOProxy
+    public partial class UOProxy
     {
         public TcpListener tcpListener;
         Thread ClientComThread;
-
+        public static bool ProxyMode = false;
         //When using as a proxy, Call this method, Starts listening for local client connection, once client connects, sends connect to Server
         public bool StartListeningForClient(int port)
         {
             try
             {
                 tcpListener = new TcpListener(IPAddress.Any, port);
-                tcpListener.BeginAcceptTcpClient(AcceptClientConnection, tcpListener);
-                Logger.Log("Listening for incoming Client connections");
+                tcpListener.Start();
+                var client = tcpListener.AcceptTcpClient();
+                AcceptClientConnection(client);
+                Logger.Log("Listening for incoming Client connections on: " + IPAddress.Loopback + ":" + port);
+                ProxyMode = true;
                 return true;
             }
             catch
@@ -28,10 +31,9 @@ namespace UOProxy
                 return false;
             }
         }
-        private void AcceptClientConnection(object state)
+        private void AcceptClientConnection(TcpClient UOClient)
         {
-            TcpListener Listener = (TcpListener)state;
-            TcpClient UOClient = Listener.AcceptTcpClient();
+
             Logger.Log("Accepted Client Connection, Starting message loop and connecting to server");
             ClientComThread = new Thread(new ParameterizedThreadStart(HandleClientCom));
             ClientComThread.Start(UOClient);
@@ -90,10 +92,10 @@ namespace UOProxy
                             Array.Copy(data, bytesConsumed, unusedData, 0, bytesRead - bytesConsumed); // copy unused data to new array
                             IncomingQueue.AddRange(unusedData); // add the unused data to the Queue
                             Logger.Log("From Server DeHuffed: " + BitConverter.ToString(dest, 0, bytesRead));
-                            if(TcpClients.client != null)
-                            TcpClients.client.GetStream().Write(data, 0, bytesConsumed); //pass along the consumed data still compressed, we only send data for packets we have whole data for
-                            
-                            HandlePacketFromServer(data);
+                            //if(TcpClients.client != null)
+                            //TcpClients.client.GetStream().Write(data, 0, bytesConsumed); //pass along the consumed data still compressed, we only send data for packets we have whole data for
+
+                            HandlePacketFromServer(data, TcpClients.client);
                         }
                     }
                     else
@@ -104,20 +106,17 @@ namespace UOProxy
                 else
                 {
                     //TODO handle packets
-                    HandlePacketFromServer(data);
+                    HandlePacketFromServer(data, TcpClients.client);
                     Logger.Log("From Server NoHuff: " + BitConverter.ToString(data, 0, bytesRead));
-                    if (TcpClients.client != null)
-                    TcpClients.client.GetStream().Write(data, 0, bytesRead);
+                    //if (TcpClients.client != null)
+                    //TcpClients.client.GetStream().Write(data, 0, bytesRead);
                     
                 }
 
             }
         }
 
-        private void HandlePacketFromServer(byte[] data)
-        {
-            throw new NotImplementedException();
-        }
+       
 
         // Connects to a server and returns Server TcpClient if sucessful, Called when using in Nonproxy mode.
         public TcpClient ConnectToServer(string ip, int port)

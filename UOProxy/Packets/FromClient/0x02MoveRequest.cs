@@ -10,7 +10,7 @@ namespace UOProxy.Packets.FromClient
         public byte Direction;
         public byte SequenceNumber;
         public int FastWalkPreventionKey;
-        public _0x02MoveRequest(byte[] data) : base(data)
+        public _0x02MoveRequest(UOStream data) : base(data)
         {
             try
             {

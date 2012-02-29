@@ -70,11 +70,24 @@ namespace UOProxy
                         p = new _0x8CConnectToGameServer(Data);
                         if (EventConnectToGameServer != null)
                             EventConnectToGameServer((_0x8CConnectToGameServer)p);
+                        UOProxy.UseHuffman = true;
+                        break;
+                    default:
+                        Data.Position = Data.Length;
                         break;
 
                 }
-                if (client != null) // Send Packet onto client fuck compress it :|
-                    client.GetStream().Write(p.PacketData, 0, p.PacketData.Length);
+                /*if (p != null)
+                {
+                    if (client != null) // Send Packet onto client fuck compress it :|
+                        client.GetStream().Write(p.PacketData, 0, p.PacketData.Length);
+                }
+                else
+                {
+                    if (client != null) // Send Packet onto client fuck compress it :|
+                        client.GetStream().Write(data, 0, data.Length);
+                }*/
+               
 
 
             }

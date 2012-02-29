@@ -20,8 +20,9 @@ namespace UOProxy
             {
                 tcpListener = new TcpListener(IPAddress.Any, port);
                 tcpListener.Start();
-                var client = tcpListener.AcceptTcpClient();
-                AcceptClientConnection(client);
+                tcpListener.BeginAcceptTcpClient(new AsyncCallback(this.AcceptClientConnection), tcpListener);
+                //var client = tcpListener.AcceptTcpClient();
+                //AcceptClientConnection(client);
                 Logger.Log("Listening for incoming Client connections on: " + IPAddress.Loopback + ":" + port);
                 ProxyMode = true;
                 return true;
@@ -31,12 +32,14 @@ namespace UOProxy
                 return false;
             }
         }
-        private void AcceptClientConnection(TcpClient UOClient)
+        private void AcceptClientConnection(IAsyncResult ar)
         {
-
+            TcpListener client = (TcpListener)ar.AsyncState;
             Logger.Log("Accepted Client Connection, Starting message loop and connecting to server");
             ClientComThread = new Thread(new ParameterizedThreadStart(HandleClientCom));
+            TcpClient UOClient = client.EndAcceptTcpClient(ar);
             ClientComThread.Start(UOClient);
+            client.BeginAcceptTcpClient(new AsyncCallback(this.AcceptClientConnection), tcpListener);
             
         }
 
@@ -56,22 +59,32 @@ namespace UOProxy
                 Logger.Log("From Client: " + BitConverter.ToString(data, 0, bytesRead));
                 //Todo parse packet stream, ability to filter certain packet.
                 Server.GetStream().Write(data, 0, bytesRead);
+                Server.GetStream().Flush();
             }
         }
+        byte[] TempdataBuffer = new byte[4096];
+        public static bool UseHuffman = false;
         private void HandleServerCom(object cliserv)
         {
             List<byte> IncomingQueue = new List<byte>();
             ClientServer TcpClients = (ClientServer)cliserv;
             HuffmanDecompression Decompressor = new HuffmanDecompression();
             NetworkStream ServerStream = TcpClients.server.GetStream();
-            bool UseHuffman = false;
+            
             while (TcpClients.server.Connected)
             {
                 //MessagePump from/to Server
-                byte[] data = new byte[4096];
+
                 if (TcpClients.server.Available <= 0)
                     continue;
-                int bytesRead = ServerStream.Read(data, 0, TcpClients.server.Available);
+                int bytesRead = ServerStream.Read(TempdataBuffer, 0, TcpClients.server.Available);
+
+                byte[] data = new byte[bytesRead];
+                Array.Copy(TempdataBuffer, 0, data, 0, bytesRead);
+
+                if (TcpClients.client != null && UseHuffman)
+                    TcpClients.client.GetStream().Write(data, 0, bytesRead);// this is here so we send uncompressed for now, No compress method
+
                 if (IncomingQueue.Count > 0)
                 {
                     IncomingQueue.AddRange(data); 
@@ -80,7 +93,8 @@ namespace UOProxy
                 }
                 if (UseHuffman)
                 {
-                    byte[] dest = new byte[1024];
+                    
+                    byte[] dest = new byte[4096];
                     int destSize = 0;
                     int bytesConsumed = 0;
                     if (Decompressor.DecompressOnePacket(ref data, bytesRead, ref dest, ref destSize, ref bytesConsumed))
@@ -88,29 +102,29 @@ namespace UOProxy
                         if (bytesConsumed < bytesRead)
                         {
                             // Must have been multiple packets in buffer.
-                            byte[] unusedData = new byte[bytesRead - bytesConsumed]; // buffer for received data that was not uncompressed
-                            Array.Copy(data, bytesConsumed, unusedData, 0, bytesRead - bytesConsumed); // copy unused data to new array
-                            IncomingQueue.AddRange(unusedData); // add the unused data to the Queue
-                            Logger.Log("From Server DeHuffed: " + BitConverter.ToString(dest, 0, bytesRead));
-                            //if(TcpClients.client != null)
-                            //TcpClients.client.GetStream().Write(data, 0, bytesConsumed); //pass along the consumed data still compressed, we only send data for packets we have whole data for
-
-                            HandlePacketFromServer(data, TcpClients.client);
+                            IncomingQueue.AddRange(data); // add the unused data to the Queue
                         }
+                        byte[] destTrimmed = new byte[destSize];
+                        Array.Copy(dest, 0, destTrimmed, 0, destSize);
+                        Logger.Log("From Server DeHuffed: " + BitConverter.ToString(dest, 0, destSize));
+                        HandlePacketFromServer(destTrimmed, TcpClients.client);
                     }
                     else
-                    {
+                    { // Failed to decompress throw data back in queue
                         IncomingQueue.AddRange(data);
                     }
                 }
                 else
                 {
-                    //TODO handle packets
                     HandlePacketFromServer(data, TcpClients.client);
                     Logger.Log("From Server NoHuff: " + BitConverter.ToString(data, 0, bytesRead));
-                    //if (TcpClients.client != null)
-                    //TcpClients.client.GetStream().Write(data, 0, bytesRead);
-                    
+
+                    if (TcpClients.client != null)
+                    TcpClients.client.GetStream().Write(data, 0, bytesRead);
+                    if (data[0] == 0x8c)
+                    {
+                        TcpClients.server.Close();
+                    }
                 }
 
             }

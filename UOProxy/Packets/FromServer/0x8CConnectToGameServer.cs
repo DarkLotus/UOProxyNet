@@ -25,8 +25,9 @@ namespace UOProxy.Packets.FromServer
             {
                 // If we are in proxy mode, overwrite servers IP with local IP
                 IP = IPAddress.Loopback;
-                Data.Position = 0;
+                Data.Position = 1;
                 Data.Write(_ip, 0, 4);
+                //ToDo Add Port override
             }
                 
         }

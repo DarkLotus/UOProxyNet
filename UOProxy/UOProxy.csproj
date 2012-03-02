@@ -47,17 +47,23 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Class1.cs" />
-    <Compile Include="Events.cs" />
     <Compile Include="HandleServerPackets.cs" />
     <Compile Include="Huffman.cs" />
     <Compile Include="Logger.cs" />
     <Compile Include="Packets\FromClient\0x02MoveRequest.cs" />
+    <Compile Include="Packets\FromClient\0x05RequestAttack.cs" />
+    <Compile Include="Packets\FromClient\0x06DoubleClick.cs" />
+    <Compile Include="Packets\FromClient\0x07PickUpItem.cs" />
     <Compile Include="Packets\FromServer\0x11StatusBarInfo.cs" />
     <Compile Include="Packets\FromServer\0x1AObjectInfo.cs" />
     <Compile Include="Packets\FromServer\0x1CSendSpeech.cs" />
     <Compile Include="Packets\FromServer\0x2DMobAttributes.cs" />
     <Compile Include="Packets\FromServer\0x77UpdatePlayer.cs" />
     <Compile Include="Packets\FromServer\0x8CConnectToGameServer.cs" />
+    <Compile Include="Packets\FromServer\0x0BDamage.cs" />
+    <Compile Include="Packets\FromServer\0x16NewHealthBarStatusUpdate.cs" />
+    <Compile Include="Packets\FromServer\0x1BCharLocaleBody.cs" />
+    <Compile Include="Packets\FromServer\0x1DDeleteObject.cs" />
     <Compile Include="Packets\Packet.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UOStream.cs" />

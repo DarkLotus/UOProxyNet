@@ -10,6 +10,7 @@ namespace UOProxy.Packets
     {
         public UOStream Data;
         public byte OpCode;
+        public Type PacketType;
         public Packet(UOStream data)
         {
             this.Data = data;
@@ -25,5 +26,6 @@ namespace UOProxy.Packets
             Data.WriteByte(OpCode);
         }
         public byte[] PacketData { get { return Data.ToArray(); } }
+
     }
 }

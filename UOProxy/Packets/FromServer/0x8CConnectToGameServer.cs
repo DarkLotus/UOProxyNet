@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Net;
-
 namespace UOProxy.Packets.FromServer
 {
     public class _0x8CConnectToGameServer : Packet
@@ -29,7 +28,7 @@ namespace UOProxy.Packets.FromServer
                 Data.Write(_ip, 0, 4);
                 //ToDo Add Port override
             }
-                
+            PacketType = typeof(_0x8CConnectToGameServer);  
         }
         public IPAddress IP { get { return new IPAddress(_ip); } private set { _ip = value.GetAddressBytes(); } }
     }

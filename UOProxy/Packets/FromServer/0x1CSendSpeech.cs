@@ -24,7 +24,7 @@ namespace UOProxy.Packets.FromServer
             TextColor = Data.ReadShort();
             Font = Data.ReadShort();
             Name = Data.Read30CharString(); // try normal read?
-            Message = Data.ReadString();
+            Message = Data.ReadNullTermString();
         }
     }
 }

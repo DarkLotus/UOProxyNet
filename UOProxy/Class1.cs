@@ -5,11 +5,13 @@ using System.Text;
 using System.Net.Sockets;
 using System.Net;
 using System.Threading;
+using UOProxy.Packets.FromServer;
 
 namespace UOProxy
 {
     public partial class UOProxy
     {
+        
         public TcpListener tcpListener;
         Thread ClientComThread;
         public static bool ProxyMode = false;
@@ -18,6 +20,8 @@ namespace UOProxy
         {
             try
             {
+                SetupHandlers();
+                
                 tcpListener = new TcpListener(IPAddress.Any, port);
                 tcpListener.Start();
                 tcpListener.BeginAcceptTcpClient(new AsyncCallback(this.AcceptClientConnection), tcpListener);
@@ -62,7 +66,7 @@ namespace UOProxy
                 Server.GetStream().Flush();
             }
         }
-        byte[] TempdataBuffer = new byte[4096];
+        byte[] TempdataBuffer = new byte[8192];
         public static bool UseHuffman = false;
         private void HandleServerCom(object cliserv)
         {
@@ -82,7 +86,7 @@ namespace UOProxy
                 byte[] data = new byte[bytesRead];
                 Array.Copy(TempdataBuffer, 0, data, 0, bytesRead);
 
-                if (TcpClients.client != null && UseHuffman)
+                if (TcpClients.client != null && UseHuffman && TcpClients.client.Connected)
                     TcpClients.client.GetStream().Write(data, 0, bytesRead);// this is here so we send uncompressed for now, No compress method
 
                 if (IncomingQueue.Count > 0)
@@ -171,6 +175,8 @@ namespace UOProxy
             server = Server;
         }
         }
+
+     
     }
 }
 /*

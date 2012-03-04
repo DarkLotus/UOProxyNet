@@ -5,6 +5,8 @@ using System.Text;
 using UOProxy.Packets.FromServer;
 using UOProxy.Packets;
 using System.Net.Sockets;
+using System.ComponentModel.Design;
+using System.Reflection;
 namespace UOProxy
 {
     public partial class UOProxy
@@ -12,10 +14,10 @@ namespace UOProxy
         public event UpdatePlayerEventHandler EventUpdatePlayer;
         public delegate void UpdatePlayerEventHandler(_0x77UpdatePlayer e);
 
-        public event ObjectInfoEventHandler EventObjectInfo;
+        public event ObjectInfoEventHandler _0x1AObjectInfo;
         public delegate void ObjectInfoEventHandler(_0x1AObjectInfo e);
 
-        public event ConnectToGameServerEventHandler EventConnectToGameServer;
+        public event ConnectToGameServerEventHandler _0x8CConnectToGameServer;
         public delegate void ConnectToGameServerEventHandler(_0x8CConnectToGameServer e);
 
         public event StatusBarInfoEventHandler EventStatusBarInfo;
@@ -24,52 +26,110 @@ namespace UOProxy
         public event SendSpeechEventHandler EventSendSpeech;
         public delegate void SendSpeechEventHandler(_0x1CSendSpeech e);
 
+        public event DeleteObjectEventHandler _0x1DDeleteObject;
+        public delegate void DeleteObjectEventHandler(_0x1DDeleteObject e);
+
         public event MobAttributeEventHandler EventMobAttribute;
         public delegate void MobAttributeEventHandler(_0x2DMobAttributes e);
-        //public event AAAEventHandler EventAAA;
-        //public delegate void AAAAEventHandler(_0x11StatusBarInfo e);
+        public event AAAAEventHandler EventAAA;
+        public delegate void AAAAEventHandler(Packet e);
+        public event DamageEventHandler EventDamage;
+        public delegate void DamageEventHandler(_0x0BDamage e);
 
+        //public EventDictionary HandlersEvents = new EventDictionary();
+        public Dictionary<byte, Type> Handlers = new Dictionary<byte, Type>();
+        internal class EventDictionary : Dictionary<byte,EventHandler>
+        {
+            public void Add(byte key,EventHandler e)
+            {
+                if (e == null)
+                    throw new ArgumentException("Event Handler cannot be null.",
+                        "e");
+                //string s = e.Target.GetType().GetEvents()[0].ToString();
+                base.Add(key, e);
+            }
+
+            internal void Add(int p, ConnectToGameServerEventHandler connectToGameServerEventHandler)
+            {
+                
+                throw new NotImplementedException();
+            }
+        }
+
+        private void SetupHandlers()
+        {
+            Handlers.Clear();
+            Handlers.Add(0x8c, typeof(Packets.FromServer._0x8CConnectToGameServer));
+            Handlers.Add(0x1D, typeof(Packets.FromServer._0x1DDeleteObject));
+            Handlers.Add(0x1A, typeof(Packets.FromServer._0x1AObjectInfo));
+
+        }
         private void HandlePacketFromServer(byte[] data, TcpClient client)
         {
             //uncompressed packets may arrive with more than one in data;
+            //HandlersEvents.Add(0x8c, this._0x8CConnectToGameServer);
             UOStream Data = new UOStream(data);
+            Packet packet = new Packet();
+
+            if (Handlers.ContainsKey(data[0]))
+            {
+                packet = (Packet)Activator.CreateInstance(Handlers[data[0]], new object[] { Data });
+                var eventinfo = this.GetType().GetField(packet.GetType().Name, BindingFlags.Instance
+                    | BindingFlags.NonPublic);
+
+                if (eventinfo != null)
+                {
+                    var member = eventinfo.GetValue(this);
+                    if (member != null)
+                        member.GetType().GetMethod("Invoke").Invoke(member, new object[] { packet });
+                }
+                if (data[0] == 0x8c)
+                { UOProxy.UseHuffman = true; }
+                return;
             while (Data.Position < Data.Length)
             {
-                Packet p = new Packet();
-                switch (data[Data.Position])
+               
+                }
+                /*switch (data[0])
                 {
+                    case OpCode.SMSG_Damage:
+                        packet = new _0x0BDamage(Data);
+                        if (EventDamage != null)
+                            EventDamage((_0x0BDamage)packet);
+                        break;
+                    
                     case OpCode.SMSG_StatusBarInfo:
-                        p = new _0x11StatusBarInfo(Data);
+                        packet = new _0x11StatusBarInfo(Data);
                         if (EventStatusBarInfo != null)
-                            EventStatusBarInfo((_0x11StatusBarInfo)p);
+                            EventStatusBarInfo((_0x11StatusBarInfo)packet);
                         break;
 
                     case OpCode.SMSG_ObjectInfo:
-                        p = new _0x1AObjectInfo(Data);
+                        packet = new _0x1AObjectInfo(Data);
                         if (EventObjectInfo != null)
-                            EventObjectInfo((_0x1AObjectInfo)p);
+                            EventObjectInfo((_0x1AObjectInfo)packet);
                         break;
 
                     case OpCode.SMSG_SendSpeach:
-                        p = new _0x1CSendSpeech(Data);
+                        packet = new _0x1CSendSpeech(Data);
                         if (EventSendSpeech != null)
-                            EventSendSpeech((_0x1CSendSpeech)p);
+                            EventSendSpeech((_0x1CSendSpeech)packet);
                         break;
                     case OpCode.SMSG_MobAttribute:
-                        p = new _0x2DMobAttributes(Data);
+                        packet = new _0x2DMobAttributes(Data);
                         if (EventMobAttribute != null)
-                            EventMobAttribute((_0x2DMobAttributes)p);
+                            EventMobAttribute((_0x2DMobAttributes)packet);
                         break;
 
                     case OpCode.SMSG_UpdatePlayer:
-                        p = new _0x77UpdatePlayer(Data);
+                        packet = new _0x77UpdatePlayer(Data);
                         if (EventUpdatePlayer != null)
-                            EventUpdatePlayer((_0x77UpdatePlayer)p);
+                            EventUpdatePlayer((_0x77UpdatePlayer)packet);
                         break;
                     case OpCode.SMSG_ConnectToGameServer:
-                        p = new _0x8CConnectToGameServer(Data);
-                        if (EventConnectToGameServer != null)
-                            EventConnectToGameServer((_0x8CConnectToGameServer)p);
+                        packet = new _0x8CConnectToGameServer(Data);
+                        //if (EventConnectToGameServer != null)
+                        //    EventConnectToGameServer((_0x8CConnectToGameServer)p);
                         UOProxy.UseHuffman = true;
                         break;
                     default:

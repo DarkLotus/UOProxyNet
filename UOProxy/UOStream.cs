@@ -81,7 +81,16 @@ namespace UOProxy
             }
             return new string(mystring);
         }
-        public string ReadString()
+        public string ReadString(int bytesToRead)
+        {
+            char[] mystring = new char[bytesToRead];
+            for (int i = 0; i <= bytesToRead; i++)
+            {
+                mystring[i] = (char)this.ReadBit();
+            }
+            return new string(mystring);
+        }
+        public string ReadNullTermString()
         {
             byte current;
             byte previous = 1;

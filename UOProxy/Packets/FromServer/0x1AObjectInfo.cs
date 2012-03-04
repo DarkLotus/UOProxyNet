@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Reflection;
 
 namespace UOProxy.Packets.FromServer
 {
@@ -60,6 +61,16 @@ namespace UOProxy.Packets.FromServer
 
         }
 
-      
+        public override string ToString()
+        {
+            string s = "";
+            FieldInfo[] fields = this.GetType().GetFields();
+            MemberInfo[] members = this.GetType().GetMembers();
+            foreach (var x in fields)
+            {
+                s = s + " " + x.Name + ":" + x.GetValue(this).ToString() + " ";
+            }
+            return s;
+        }
     }
 }

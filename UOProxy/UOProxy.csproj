@@ -54,6 +54,7 @@
     <Compile Include="Packets\FromClient\0x05RequestAttack.cs" />
     <Compile Include="Packets\FromClient\0x06DoubleClick.cs" />
     <Compile Include="Packets\FromClient\0x07PickUpItem.cs" />
+    <Compile Include="Packets\FromClient\0xB1GumpMenuSelection.cs" />
     <Compile Include="Packets\FromServer\0x11StatusBarInfo.cs" />
     <Compile Include="Packets\FromServer\0x1AObjectInfo.cs" />
     <Compile Include="Packets\FromServer\0x1CSendSpeech.cs" />

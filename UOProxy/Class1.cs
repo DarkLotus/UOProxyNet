@@ -53,18 +53,23 @@ namespace UOProxy
             TcpClient client = (TcpClient)Client;
             NetworkStream ClientStream = client.GetStream();
             TcpClient Server = ConnectToServer("69.162.65.42", 2593, client);
+            byte[] data = new byte[4096];
             while (client.Connected)
             {
+                Thread.Sleep(5);
                 //Message pump for comm from/to client
-                byte[] data = new byte[4096];
+                
                 if (client.Available <= 0)
                     continue;
                 int bytesRead = ClientStream.Read(data, 0, client.Available);
+                if(data[0] != 0xBF)
                 Logger.Log("From Client: " + BitConverter.ToString(data, 0, bytesRead));
                 //Todo parse packet stream, ability to filter certain packet.
                 Server.GetStream().Write(data, 0, bytesRead);
                 Server.GetStream().Flush();
             }
+            if(Server.Connected)
+            Server.Close();
         }
         byte[] TempdataBuffer = new byte[8192];
         public static bool UseHuffman = false;
@@ -78,7 +83,7 @@ namespace UOProxy
             while (TcpClients.server.Connected)
             {
                 //MessagePump from/to Server
-
+                Thread.Sleep(5);
                 if (TcpClients.server.Available <= 0)
                     continue;
                 int bytesRead = ServerStream.Read(TempdataBuffer, 0, TcpClients.server.Available);
@@ -94,27 +99,25 @@ namespace UOProxy
                     IncomingQueue.AddRange(data); 
                     data = IncomingQueue.ToArray();
                     IncomingQueue = new List<byte>();
+                    bytesRead = data.Length;
                 }
                 if (UseHuffman)
                 {
                     
                     byte[] dest = new byte[4096];
                     int destSize = 0;
-                    int bytesConsumed = 0;
-                    if (Decompressor.DecompressOnePacket(ref data, bytesRead, ref dest, ref destSize, ref bytesConsumed))
-                    {
-                        if (bytesConsumed < bytesRead)
-                        {
-                            // Must have been multiple packets in buffer.
-                            IncomingQueue.AddRange(data); // add the unused data to the Queue
-                        }
+                    int datalen = data.Length;
+                    while (Decompressor.DecompressOnePacket(ref data, bytesRead, ref dest, ref destSize))
+                    {                        
                         byte[] destTrimmed = new byte[destSize];
                         Array.Copy(dest, 0, destTrimmed, 0, destSize);
-                        Logger.Log("From Server DeHuffed: " + BitConverter.ToString(dest, 0, destSize));
+                        //Logger.Log("From Server DeHuffed: " + BitConverter.ToString(destTrimmed, 0, destSize));
                         HandlePacketFromServer(destTrimmed, TcpClients.client);
+                        bytesRead = data.Length;
                     }
-                    else
-                    { // Failed to decompress throw data back in queue
+                    if (data.Length > 0)
+                    {
+                        Logger.Log("NoFull Packets adding " + data.Count() + " to queue");
                         IncomingQueue.AddRange(data);
                     }
                 }

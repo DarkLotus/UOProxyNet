@@ -11,30 +11,43 @@ namespace UOProxy
 {
     public partial class UOProxy
     {
-        public event UpdatePlayerEventHandler EventUpdatePlayer;
-        public delegate void UpdatePlayerEventHandler(_0x77UpdatePlayer e);
+        public event DamageEventHandler _0x0BDamage;
+        public delegate void DamageEventHandler(_0x0BDamage e);
+
+        public event StatusBarInfoEventHandler _0x11StatusBarInfo;
+        public delegate void StatusBarInfoEventHandler(_0x11StatusBarInfo e);
+
+        public event StatusBarUpdateEventHandler _0x16StatusBarUpdate;
+        public delegate void StatusBarUpdateEventHandler(_0x16StatusBarUpdate e);
 
         public event ObjectInfoEventHandler _0x1AObjectInfo;
         public delegate void ObjectInfoEventHandler(_0x1AObjectInfo e);
 
-        public event ConnectToGameServerEventHandler _0x8CConnectToGameServer;
-        public delegate void ConnectToGameServerEventHandler(_0x8CConnectToGameServer e);
+        public event CharLocaleEventHandler _0x1BCharLocaleBody;
+        public delegate void CharLocaleEventHandler(_0x1BCharLocaleBody e);
 
-        public event StatusBarInfoEventHandler EventStatusBarInfo;
-        public delegate void StatusBarInfoEventHandler(_0x11StatusBarInfo e);
-
-        public event SendSpeechEventHandler EventSendSpeech;
+        public event SendSpeechEventHandler _0x1CSendSpeech;
         public delegate void SendSpeechEventHandler(_0x1CSendSpeech e);
 
         public event DeleteObjectEventHandler _0x1DDeleteObject;
         public delegate void DeleteObjectEventHandler(_0x1DDeleteObject e);
 
-        public event MobAttributeEventHandler EventMobAttribute;
+        public event MobAttributeEventHandler _0x2DMobAttributes;
         public delegate void MobAttributeEventHandler(_0x2DMobAttributes e);
+
+        public event UpdatePlayerEventHandler _0x77UpdatePlayer;
+        public delegate void UpdatePlayerEventHandler(_0x77UpdatePlayer e);
+
+        public event ConnectToGameServerEventHandler _0x8CConnectToGameServer;
+        public delegate void ConnectToGameServerEventHandler(_0x8CConnectToGameServer e);
+
+        public event SendGumpMenuDialogEventHandler _0xB0SendGumpMenuDialog;
+        public delegate void SendGumpMenuDialogEventHandler(_0xB0SendGumpMenuDialog e);
+
         public event AAAAEventHandler EventAAA;
         public delegate void AAAAEventHandler(Packet e);
-        public event DamageEventHandler EventDamage;
-        public delegate void DamageEventHandler(_0x0BDamage e);
+
+        
 
         //public EventDictionary HandlersEvents = new EventDictionary();
         public Dictionary<byte, Type> Handlers = new Dictionary<byte, Type>();
@@ -59,9 +72,18 @@ namespace UOProxy
         private void SetupHandlers()
         {
             Handlers.Clear();
-            Handlers.Add(0x8c, typeof(Packets.FromServer._0x8CConnectToGameServer));
-            Handlers.Add(0x1D, typeof(Packets.FromServer._0x1DDeleteObject));
+            Handlers.Add(0x0B, typeof(Packets.FromServer._0x0BDamage));
+            Handlers.Add(0x11, typeof(Packets.FromServer._0x11StatusBarInfo));
+            Handlers.Add(0x16, typeof(Packets.FromServer._0x16StatusBarUpdate));
             Handlers.Add(0x1A, typeof(Packets.FromServer._0x1AObjectInfo));
+            Handlers.Add(0x1B, typeof(Packets.FromServer._0x1BCharLocaleBody));
+            Handlers.Add(0x1C, typeof(Packets.FromServer._0x1CSendSpeech));
+            Handlers.Add(0x1D, typeof(Packets.FromServer._0x1DDeleteObject));
+            Handlers.Add(0x2D, typeof(Packets.FromServer._0x2DMobAttributes));
+            Handlers.Add(0x77, typeof(Packets.FromServer._0x77UpdatePlayer));
+            Handlers.Add(0x8c, typeof(Packets.FromServer._0x8CConnectToGameServer));
+            Handlers.Add(0xB0, typeof(Packets.FromServer._0xB0SendGumpMenuDialog));
+            
 
         }
         private void HandlePacketFromServer(byte[] data, TcpClient client)
@@ -70,10 +92,19 @@ namespace UOProxy
             //HandlersEvents.Add(0x8c, this._0x8CConnectToGameServer);
             UOStream Data = new UOStream(data);
             Packet packet = new Packet();
-
+            if (data == null) {
+                return; }
+            if (data.Length < 1) { 
+                return;
+            }
+            if (data[0] == 0xB0)
+            {
+                int x = 1;
+            }
             if (Handlers.ContainsKey(data[0]))
             {
                 packet = (Packet)Activator.CreateInstance(Handlers[data[0]], new object[] { Data });
+                Logger.Log(packet.ToString() + "Handled");
                 var eventinfo = this.GetType().GetField(packet.GetType().Name, BindingFlags.Instance
                     | BindingFlags.NonPublic);
 
@@ -81,11 +112,29 @@ namespace UOProxy
                 {
                     var member = eventinfo.GetValue(this);
                     if (member != null)
+                    {
+                        Logger.Log(member.ToString());
                         member.GetType().GetMethod("Invoke").Invoke(member, new object[] { packet });
+                    }
+                    else
+                    {
+                        Logger.Log("MEMBER WAS NULL FOR EVENT: " + eventinfo.Name);
+                    }
+
+                }
+                else
+                {
+                    Logger.Log("EVENTFIELD WAS NULL FOR PACKET : " + packet.ToString());
                 }
                 if (data[0] == 0x8c)
                 { UOProxy.UseHuffman = true; }
                 return;
+            }
+            else
+            {
+                Logger.Log(data[0].ToString("x") + "No Handler");
+            }
+            return;
             while (Data.Position < Data.Length)
             {
                
@@ -147,10 +196,7 @@ namespace UOProxy
                     if (client != null) // Send Packet onto client fuck compress it :|
                         client.GetStream().Write(data, 0, data.Length);
                 }*/
-               
-
-
-            }
+              
 
         }
     }

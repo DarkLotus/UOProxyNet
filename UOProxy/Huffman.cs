@@ -295,9 +295,9 @@ namespace UOProxy
             return 1;
         }
 
-        public bool DecompressOnePacket(ref byte[] src, int src_size, ref byte[] dest, ref int dest_size, ref int bytesConsumed)
+        public bool DecompressOnePacket(ref byte[] src, int src_size, ref byte[] dest, ref int dest_size)
         {
-            Array.Clear(dest, 0, dest.Length); dest_size = 0; bytesConsumed = 0;
+            Array.Clear(dest, 0, dest.Length); dest_size = 0;
             int node = 0, leaf = 0, leaf_value = 0, dest_pos = 0, bit_num = 8, src_pos = 0;
 
             while (src_pos < src_size)
@@ -314,7 +314,6 @@ namespace UOProxy
                     Array.Copy(src, src_pos, newsource, 0, src_size - src_pos);
                     src = newsource;
                     dest_size = dest_pos;
-                    bytesConsumed = src_pos;
                     return true;
                 }
                 else if (leaf_value < 1)

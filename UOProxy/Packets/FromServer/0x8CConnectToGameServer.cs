@@ -28,7 +28,7 @@ namespace UOProxy.Packets.FromServer
                 Data.Write(_ip, 0, 4);
                 //ToDo Add Port override
             }
-            PacketType = typeof(_0x8CConnectToGameServer);  
+            
         }
         public IPAddress IP { get { return new IPAddress(_ip); } private set { _ip = value.GetAddressBytes(); } }
     }

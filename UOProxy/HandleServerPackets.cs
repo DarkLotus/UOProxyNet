@@ -44,6 +44,9 @@ namespace UOProxy
         public event SendGumpMenuDialogEventHandler _0xB0SendGumpMenuDialog;
         public delegate void SendGumpMenuDialogEventHandler(_0xB0SendGumpMenuDialog e);
 
+        public event CompressedGumpEventHandler _0xDDCompressedGump;
+        public delegate void CompressedGumpEventHandler(_0xDDCompressedGump e);
+
         public event AAAAEventHandler EventAAA;
         public delegate void AAAAEventHandler(Packet e);
 
@@ -83,6 +86,7 @@ namespace UOProxy
             Handlers.Add(0x77, typeof(Packets.FromServer._0x77UpdatePlayer));
             Handlers.Add(0x8c, typeof(Packets.FromServer._0x8CConnectToGameServer));
             Handlers.Add(0xB0, typeof(Packets.FromServer._0xB0SendGumpMenuDialog));
+            Handlers.Add(0xDD, typeof(Packets.FromServer._0xDDCompressedGump));
             
 
         }
@@ -97,10 +101,7 @@ namespace UOProxy
             if (data.Length < 1) { 
                 return;
             }
-            if (data[0] == 0xB0)
-            {
-                int x = 1;
-            }
+            Data.Position = 0;
             if (Handlers.ContainsKey(data[0]))
             {
                 packet = (Packet)Activator.CreateInstance(Handlers[data[0]], new object[] { Data });

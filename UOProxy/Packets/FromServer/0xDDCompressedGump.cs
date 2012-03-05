@@ -3,27 +3,24 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
+//Using some code from UltimaXNA
 namespace UOProxy.Packets.FromServer
 {
     public class _0xDDCompressedGump : Packet
     {
-        short length;
+        short length_;
         public int PlayerID;
         public int GumpID, X, Y;
 
         int compressedGumpLength, decompressedGumpLength;
-        byte[] GumpData;
 
-        int NumberTextLines,CompressedTextLen,DecompressedTextLen;
-        byte[] GumpTextData;
-
-        List<string> Text = new List<string>();
+        public readonly string[] TextLines;
         public _0xDDCompressedGump(UOStream Data)
             : base(Data)
         {
             try
             {
-                length = Data.ReadShort();
+                length_ = Data.ReadShort();
                 PlayerID = Data.ReadInt();
                 GumpID = Data.ReadInt();
                 X = Data.ReadInt();
@@ -32,12 +29,43 @@ namespace UOProxy.Packets.FromServer
                 decompressedGumpLength = Data.ReadInt();
                 if (compressedGumpLength > 1)
                 {
-                    GumpData = new byte[compressedGumpLength];
-                    Data.Read(GumpData, 0, compressedGumpLength);
+                    byte[] compressedGumpData = new byte[compressedGumpLength];
+                    Data.Read(compressedGumpData, 0, compressedGumpLength);
+                    byte[] decompressedData = new byte[decompressedGumpLength];
+                    OpenUO.Core.IO.ZlibCompression.Unpack(decompressedData, ref decompressedGumpLength, compressedGumpData, compressedGumpLength);
+                    string GumpData = Encoding.ASCII.GetString(decompressedData);
+
+                    int numTextLines = Data.ReadInt();
+                    int compressedTextLength = Data.ReadInt() - 4;
+                    int decompressedTextLength = Data.ReadInt();
+                    byte[] decompressedText = new byte[decompressedTextLength];
+                    if (numTextLines > 0 && decompressedTextLength > 0)
+                    {
+                        byte[] compressedTextData = new byte[compressedTextLength];
+                        Data.Read(compressedTextData, 0, compressedTextLength);
+                        OpenUO.Core.IO.ZlibCompression.Unpack(decompressedText, ref decompressedTextLength, compressedTextData, compressedTextLength);
+                        int index = 0;
+                        List<string> lines = new List<string>();
+                        for (int i = 0; i < numTextLines; i++)
+                        {
+                            int length = decompressedText[index] * 256 + decompressedText[index + 1];
+                            index += 2;
+                            byte[] b = new byte[length * 2];
+                            Array.Copy(decompressedText, index, b, 0, length * 2);
+                            index += length * 2;
+                            lines.Add(Encoding.BigEndianUnicode.GetString(b));
+                        }
+                        TextLines = lines.ToArray();
+                    }
+                    else
+                    {
+                        TextLines = new string[0];
+                    }
+                
                 }
 
 
-                NumberTextLines = Data.ReadInt();
+                /*NumberTextLines = Data.ReadInt();
                 CompressedTextLen = Data.ReadInt() - 4;
                 DecompressedTextLen = Data.ReadInt();
                 if (CompressedTextLen > 0)
@@ -45,7 +73,7 @@ namespace UOProxy.Packets.FromServer
                     GumpTextData = new byte[CompressedTextLen];
                     Data.Read(GumpTextData, 0, CompressedTextLen);
                 }
-
+                */
 
                 //byte[] UncompressedGumpData = new byte[decompressedGumpLength];
                 //OpenUO.Core.IO.ZlibCompression.Unpack(UncompressedGumpData,ref decompressedGumpLength,GumpData,compressedGumpLength);

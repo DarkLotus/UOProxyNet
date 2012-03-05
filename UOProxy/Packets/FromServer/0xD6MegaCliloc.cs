@@ -18,17 +18,20 @@ namespace UOProxy.Packets.FromServer
         public _0xD6MegaCliloc(UOStream Data)
             : base(Data)
         {
-            OpenUO.Ultima.UnicodeFontFactory<string> factory = new OpenUO.Ultima.UnicodeFontFactory<string>(OpenUO.Ultima.InstallationLocator.Locate().FirstOrDefault());
+
+            Helpers.Cliloc Clilocdata = new Helpers.Cliloc();
+            Helpers.Cliloc.LoadStringList("enu");
             length = Data.ReadShort();
             unknown1 = Data.ReadShort();
             Serial = Data.ReadInt();
             unknown2 = Data.ReadShort();
             OwnerID = Data.ReadInt();
+            List<string> Cliocs = new List<string>();
             while(Data.Position + 6 < Data.Length)
             {
                 ClilocIDs.Add(Data.ReadInt());
                 TextToAdd.Add(Data.ReadString(Data.ReadShort()));
-                
+                Cliocs.Add(Helpers.Cliloc.Table[ClilocIDs.Last()].ToString());
             }
                   //TODO FINISH THIS     
             

@@ -50,9 +50,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Class1.cs" />
+    <Compile Include="HandleClientPacket.cs" />
     <Compile Include="HandleServerPackets.cs" />
-    <Compile Include="Huffman.cs" />
-    <Compile Include="Logger.cs" />
+    <Compile Include="Helpers\Cliloc.cs" />
+    <Compile Include="Helpers\Huffman.cs" />
+    <Compile Include="Helpers\Logger.cs" />
     <Compile Include="Packets\FromClient\0x02MoveRequest.cs" />
     <Compile Include="Packets\FromClient\0x05RequestAttack.cs" />
     <Compile Include="Packets\FromClient\0x06DoubleClick.cs" />
@@ -77,6 +79,11 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Packets\FromBoth\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="zlib32.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

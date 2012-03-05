@@ -105,7 +105,7 @@ namespace UOProxy
             if (Handlers.ContainsKey(data[0]))
             {
                 packet = (Packet)Activator.CreateInstance(Handlers[data[0]], new object[] { Data });
-                Logger.Log(packet.ToString() + "Handled");
+                //Logger.Log(packet.ToString() + "Handled");
                 var eventinfo = this.GetType().GetField(packet.GetType().Name, BindingFlags.Instance
                     | BindingFlags.NonPublic);
 
@@ -119,7 +119,7 @@ namespace UOProxy
                     }
                     else
                     {
-                        Logger.Log("MEMBER WAS NULL FOR EVENT: " + eventinfo.Name);
+                        //Logger.Log("MEMBER WAS NULL FOR EVENT: " + eventinfo.Name);
                     }
 
                 }
@@ -289,7 +289,7 @@ namespace UOProxy
         public const int CMSG_SellListReply = 0x9F;
         public const int CMSG_ClientSPy = 0xA4;
         public const int CMSG_GumpTextEntryDialogReply = 0xAC;
-        public const int CMSG_GumpMenuSelection = 0xAD;
+        public const int CMSG_GumpMenuSelection = 0xB1;
         public const int CMSG_SpyOnClient = 0xD9;
         public const int CMSG_LoginRequest = 0x80;
         public const int CMSG_SelectServer = 0xA0;

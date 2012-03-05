@@ -62,8 +62,9 @@ namespace UOProxy
                 if (client.Available <= 0)
                     continue;
                 int bytesRead = ClientStream.Read(data, 0, client.Available);
-                if(data[0] != 0xBF)
-                Logger.Log("From Client: " + BitConverter.ToString(data, 0, bytesRead));
+                if (data[0] != 0xBF)
+                    HandleClientPacket(data, bytesRead);
+                //Logger.Log("From Client: " + BitConverter.ToString(data, 0, bytesRead));
                 //Todo parse packet stream, ability to filter certain packet.
                 Server.GetStream().Write(data, 0, bytesRead);
                 Server.GetStream().Flush();
@@ -71,6 +72,8 @@ namespace UOProxy
             if(Server.Connected)
             Server.Close();
         }
+
+      
         byte[] TempdataBuffer = new byte[8192];
         public static bool UseHuffman = false;
         private void HandleServerCom(object cliserv)
@@ -117,7 +120,7 @@ namespace UOProxy
                     }
                     if (data.Length > 0)
                     {
-                        Logger.Log("NoFull Packets adding " + data.Count() + " to queue");
+                        //Logger.Log("NoFull Packets adding " + data.Count() + " to queue");
                         IncomingQueue.AddRange(data);
                     }
                 }

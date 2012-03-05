@@ -24,17 +24,25 @@ namespace UOProxy.Packets.FromClient
              GumpID = Data.ReadInt();
              ButtonID = Data.ReadInt();
              SwitchCount = Data.ReadInt();
-             for (int i = 0; i <= SwitchCount; i++)
+             if (SwitchCount > 0)
              {
-                 SwitchID.Add(Data.ReadInt());
+                 for (int i = 0; i <= SwitchCount; i++)
+                 {
+                     SwitchID.Add(Data.ReadInt());
+                 }
              }
+             
              TextCount = Data.ReadInt();
-             for (int i = 0; i <= TextCount; i++)
+             if (TextCount > 0)
              {
-                 TextID.Add(Data.ReadShort());
-                 TextLength.Add(Data.ReadShort());
-                 UnicodeText.Add(Data.ReadString(TextLength[i] * 2));
+                 for (int i = 0; i <= TextCount; i++)
+                 {
+                     TextID.Add(Data.ReadShort());
+                     TextLength.Add(Data.ReadShort());
+                     UnicodeText.Add(Data.ReadString(TextLength[i] * 2));
+                 }
              }
+             
 
             }
         public _0xB1GumpMenuSelection(int ID,int GumpID,int ButtonID) : base(0x1B)

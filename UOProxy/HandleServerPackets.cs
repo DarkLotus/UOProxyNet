@@ -32,6 +32,9 @@ namespace UOProxy
         public event DeleteObjectEventHandler _0x1DDeleteObject;
         public delegate void DeleteObjectEventHandler(_0x1DDeleteObject e);
 
+        public event DrawGamePlayerEventHandler _0x20DrawGamePlayer;
+        public delegate void DrawGamePlayerEventHandler(_0x20DrawGamePlayer e);
+
         public event MobAttributeEventHandler _0x2DMobAttributes;
         public delegate void MobAttributeEventHandler(_0x2DMobAttributes e);
 
@@ -44,16 +47,20 @@ namespace UOProxy
         public event SendGumpMenuDialogEventHandler _0xB0SendGumpMenuDialog;
         public delegate void SendGumpMenuDialogEventHandler(_0xB0SendGumpMenuDialog e);
 
+        public event MegaClilocEventHandler _0xD6MegaCliloc;
+        public delegate void MegaClilocEventHandler(_0xD6MegaCliloc e);
+
         public event CompressedGumpEventHandler _0xDDCompressedGump;
         public delegate void CompressedGumpEventHandler(_0xDDCompressedGump e);
 
+        public event F3ObjectInfoEventHandler _0xF3ObjectInfo;
+        public delegate void F3ObjectInfoEventHandler(_0xF3ObjectInfo e);
+
+
         public event AAAAEventHandler EventAAA;
         public delegate void AAAAEventHandler(Packet e);
-
-        
-
         //public EventDictionary HandlersEvents = new EventDictionary();
-        public Dictionary<byte, Type> Handlers = new Dictionary<byte, Type>();
+        public Dictionary<byte, Type> HandlersServer = new Dictionary<byte, Type>();
         internal class EventDictionary : Dictionary<byte,EventHandler>
         {
             public void Add(byte key,EventHandler e)
@@ -74,25 +81,27 @@ namespace UOProxy
 
         private void SetupHandlers()
         {
-            Handlers.Clear();
-            Handlers.Add(0x0B, typeof(Packets.FromServer._0x0BDamage));
-            Handlers.Add(0x11, typeof(Packets.FromServer._0x11StatusBarInfo));
-            Handlers.Add(0x16, typeof(Packets.FromServer._0x16StatusBarUpdate));
-            Handlers.Add(0x1A, typeof(Packets.FromServer._0x1AObjectInfo));
-            Handlers.Add(0x1B, typeof(Packets.FromServer._0x1BCharLocaleBody));
-            Handlers.Add(0x1C, typeof(Packets.FromServer._0x1CSendSpeech));
-            Handlers.Add(0x1D, typeof(Packets.FromServer._0x1DDeleteObject));
-            Handlers.Add(0x2D, typeof(Packets.FromServer._0x2DMobAttributes));
-            Handlers.Add(0x77, typeof(Packets.FromServer._0x77UpdatePlayer));
-            Handlers.Add(0x8c, typeof(Packets.FromServer._0x8CConnectToGameServer));
-            Handlers.Add(0xB0, typeof(Packets.FromServer._0xB0SendGumpMenuDialog));
-            Handlers.Add(0xDD, typeof(Packets.FromServer._0xDDCompressedGump));
-            
+            HandlersServer.Clear();
+            HandlersServer.Add(0x0B, typeof(Packets.FromServer._0x0BDamage));
+            HandlersServer.Add(0x11, typeof(Packets.FromServer._0x11StatusBarInfo));
+            HandlersServer.Add(0x16, typeof(Packets.FromServer._0x16StatusBarUpdate));
+            HandlersServer.Add(0x1A, typeof(Packets.FromServer._0x1AObjectInfo));
+            HandlersServer.Add(0x1B, typeof(Packets.FromServer._0x1BCharLocaleBody));
+            HandlersServer.Add(0x1C, typeof(Packets.FromServer._0x1CSendSpeech));
+            HandlersServer.Add(0x1D, typeof(Packets.FromServer._0x1DDeleteObject));
+            HandlersServer.Add(0x20, typeof(Packets.FromServer._0x20DrawGamePlayer));
+            HandlersServer.Add(0x2D, typeof(Packets.FromServer._0x2DMobAttributes));
+            HandlersServer.Add(0x77, typeof(Packets.FromServer._0x77UpdatePlayer));
+            HandlersServer.Add(0x8c, typeof(Packets.FromServer._0x8CConnectToGameServer));
+            HandlersServer.Add(0xB0, typeof(Packets.FromServer._0xB0SendGumpMenuDialog));
+            HandlersServer.Add(0xD6, typeof(Packets.FromServer._0xD6MegaCliloc));
+            HandlersServer.Add(0xDD, typeof(Packets.FromServer._0xDDCompressedGump));
+            HandlersServer.Add(0xF3, typeof(Packets.FromServer._0xF3ObjectInfo));
+            SetupClientHandlers();
 
         }
         private void HandlePacketFromServer(byte[] data, TcpClient client)
         {
-            //uncompressed packets may arrive with more than one in data;
             //HandlersEvents.Add(0x8c, this._0x8CConnectToGameServer);
             UOStream Data = new UOStream(data);
             Packet packet = new Packet();
@@ -102,9 +111,9 @@ namespace UOProxy
                 return;
             }
             Data.Position = 0;
-            if (Handlers.ContainsKey(data[0]))
+            if (HandlersServer.ContainsKey(data[0]))
             {
-                packet = (Packet)Activator.CreateInstance(Handlers[data[0]], new object[] { Data });
+                packet = (Packet)Activator.CreateInstance(HandlersServer[data[0]], new object[] { Data });
                 //Logger.Log(packet.ToString() + "Handled");
                 var eventinfo = this.GetType().GetField(packet.GetType().Name, BindingFlags.Instance
                     | BindingFlags.NonPublic);
@@ -127,9 +136,9 @@ namespace UOProxy
                 {
                     Logger.Log("EVENTFIELD WAS NULL FOR PACKET : " + packet.ToString());
                 }
-                if (data[0] == 0x8c)
+                /*if (data[0] == 0x8c)
                 { UOProxy.UseHuffman = true; }
-                return;
+                return;*/
             }
             else
             {

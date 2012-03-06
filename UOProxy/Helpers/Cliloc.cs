@@ -47,7 +47,7 @@ namespace UOProxy.Helpers
             m_Language = language;
             m_Table = new Hashtable();
 
-            string path = OpenUO.Ultima.InstallationLocator.Locate().FirstOrDefault() + String.Format("cliloc.{0}", language);
+            string path = OpenUO.Ultima.InstallationLocator.Locate().FirstOrDefault() + String.Format("\\cliloc.{0}", language);
 
             if (path == null)
             {
@@ -92,6 +92,37 @@ namespace UOProxy.Helpers
 
             // close the stream
             tw.Close();
+        }
+
+        public static string constructCliLoc(string nBase, string nArgs)
+        {
+            string[] iArgs = nArgs.Split('\t');
+            for (int i = 0; i < iArgs.Length; i++)
+            {
+                iArgs[i] = iArgs[i].Replace("\0", "");
+                if ((iArgs[i].Length > 0) && (iArgs[i].Substring(0, 1) == "#"))
+                {
+                    int clilocID = Convert.ToInt32(iArgs[i].Substring(1));
+                    iArgs[i] = Helpers.Cliloc.Table[clilocID].ToString();
+                }
+            }
+
+            string iConstruct = nBase;
+            for (int i = 0; i < iArgs.Length; i++)
+            {
+                int iBeginReplace = iConstruct.IndexOf('~', 0);
+                int iEndReplace = iConstruct.IndexOf('~', iBeginReplace + 1);
+                if ((iBeginReplace != -1) && (iEndReplace != -1))
+                {
+                    iConstruct = iConstruct.Substring(0, iBeginReplace) + iArgs[i] + iConstruct.Substring(iEndReplace + 1, iConstruct.Length - iEndReplace - 1);
+                }
+                else
+                {
+                    iConstruct = nBase;
+                }
+
+            }
+            return iConstruct;
         }
     }
 

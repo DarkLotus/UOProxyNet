@@ -57,11 +57,11 @@ namespace UOProxy.Packets.FromClient
             MemberInfo[] members = this.GetType().GetMembers();
             foreach (var x in fields)
             {
-                object temp = x.GetValue(null);
+                object temp = x.GetValue(this);
                 if(temp is int)
                 s = s + " " + x.Name + ":" + (int)temp + " ";
                 else
-                    s = s + " " + x.Name + ":" + (string)temp + " ";
+                    s = s + " " + x.Name + ":" + (string)temp.ToString() + " ";
                 }
             return s;
         }

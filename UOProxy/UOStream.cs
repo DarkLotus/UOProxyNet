@@ -8,9 +8,15 @@ namespace UOProxy
 {
     public class UOStream : MemoryStream
     {
+        byte[] _buffer;
+        int _index;
+        int _length;
         public UOStream(byte[] Data) : base(Data)
         {
             this.Position = 0;
+            this._buffer = Data;
+            this._index = 0;
+            this._length = Data.Length;
 
         }
         public UOStream() : base()
@@ -84,7 +90,7 @@ namespace UOProxy
         public string ReadString(int bytesToRead)
         {
             char[] mystring = new char[bytesToRead];
-            for (int i = 0; i <= bytesToRead; i++)
+            for (int i = 0; i < bytesToRead; i++)
             {
                 mystring[i] = (char)this.ReadBit();
             }
@@ -106,6 +112,72 @@ namespace UOProxy
             }
             return new string(ms.ToArray());
             
+        }
+
+        public string ReadUnicodeString()
+        {
+            StringBuilder sb = new StringBuilder();
+
+            int c;
+            
+            while ((_index + 1) < _length && (c = ((_buffer[_index++] << 8) | _buffer[_index++])) != 0)
+                sb.Append((char)c);
+
+            return sb.ToString();
+        }
+        public string ReadUnicodeStringLE()
+        {
+            StringBuilder sb = new StringBuilder();
+
+            int c;
+
+            while ((_index + 1) < _length && (c = (_buffer[_index++] | (_buffer[_index++] << 8))) != 0)
+                sb.Append((char)c);
+
+            return sb.ToString();
+        }
+        public string ReadUnicodeStringLE(int fixedLength)
+        {
+            int bound = _index + (fixedLength << 1);
+            int end = bound;
+
+            if (bound > _length)
+                bound = _length;
+
+            StringBuilder sb = new StringBuilder();
+
+            int c;
+
+            while ((_index + 1) < bound && (c = (_buffer[_index++] | (_buffer[_index++] << 8))) != 0)
+            {
+                    sb.Append((char)c);
+            }
+
+            _index = end;
+
+            return sb.ToString();
+        }
+        public string ReadUnicodeString(int fixedLength)
+        {
+            int bound = _index + (fixedLength << 1);
+            int end = bound;
+
+            if (bound > _length)
+                bound = _length;
+
+            StringBuilder sb = new StringBuilder();
+
+            int c;
+
+            while ((_index + 1) < bound && (c = ((_buffer[_index++] << 8) | _buffer[_index++])) != 0)
+            {
+                //if (IsSafeChar(c))
+                    sb.Append((char)c);
+            }
+
+            _index = end;
+
+            return sb.ToString();
         }
     }
 }

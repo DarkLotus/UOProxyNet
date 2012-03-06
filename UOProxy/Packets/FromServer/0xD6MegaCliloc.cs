@@ -13,14 +13,13 @@ namespace UOProxy.Packets.FromServer
         public int OwnerID;
         public List<int> ClilocIDs = new List<int>();
         short lengthoftext;
-        public List<string> TextToAdd = new List<string>();
+        //public List<string> TextToAdd = new List<string>();
 
         public _0xD6MegaCliloc(UOStream Data)
             : base(Data)
         {
 
-            Helpers.Cliloc Clilocdata = new Helpers.Cliloc();
-            Helpers.Cliloc.LoadStringList("enu");
+
             length = Data.ReadShort();
             unknown1 = Data.ReadShort();
             Serial = Data.ReadInt();
@@ -29,9 +28,21 @@ namespace UOProxy.Packets.FromServer
             List<string> Cliocs = new List<string>();
             while(Data.Position + 6 < Data.Length)
             {
-                ClilocIDs.Add(Data.ReadInt());
-                TextToAdd.Add(Data.ReadString(Data.ReadShort()));
-                Cliocs.Add(Helpers.Cliloc.Table[ClilocIDs.Last()].ToString());
+                int MessageNumber = Data.ReadInt();
+                short textlen = Data.ReadShort();
+                if (textlen + Data.Position > Data.Length)
+                {
+                    int errorrr = 1;
+                    break;
+                }
+
+                if(textlen > 0)
+                {
+                    string _args = Data.ReadUnicodeString(textlen);
+                    Cliocs.Add(Helpers.Cliloc.constructCliLoc(Helpers.Cliloc.Table[MessageNumber].ToString(), _args));
+                }
+                   
+                Cliocs.Add(Helpers.Cliloc.Table[MessageNumber].ToString());
             }
                   //TODO FINISH THIS     
             

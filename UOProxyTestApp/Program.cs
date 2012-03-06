@@ -17,7 +17,7 @@ namespace UOProxyTestApp
             proxy._0x8CConnectToGameServer += new UOProxy.UOProxy.ConnectToGameServerEventHandler(proxy__0x8CConnectToGameServer);
             proxy._0xB0SendGumpMenuDialog += new UOProxy.UOProxy.SendGumpMenuDialogEventHandler(proxy__0xB0SendGumpMenuDialog);
             proxy._0x77UpdatePlayer += new UOProxy.UOProxy.UpdatePlayerEventHandler(proxy__0x77UpdatePlayer);
-            proxy._0xB1GumpMenuSelection += new UOProxy.UOProxy.GumpMenuSelectionEventHandler(proxy__0xB1GumpMenuSelection);
+            proxy.Client_0xB1GumpMenuSelection += new UOProxy.UOProxy.GumpMenuSelectionEventHandler(proxy__0xB1GumpMenuSelection);
             while (true)
             {
                 Thread.Sleep(5);

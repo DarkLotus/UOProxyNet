@@ -21,7 +21,8 @@ namespace UOProxy
             try
             {
                 SetupHandlers();
-                
+                Helpers.Cliloc Clilocdata = new Helpers.Cliloc();
+                Helpers.Cliloc.LoadStringList("enu");
                 tcpListener = new TcpListener(IPAddress.Any, port);
                 tcpListener.Start();
                 tcpListener.BeginAcceptTcpClient(new AsyncCallback(this.AcceptClientConnection), tcpListener);
@@ -63,8 +64,12 @@ namespace UOProxy
                     continue;
                 int bytesRead = ClientStream.Read(data, 0, client.Available);
                 if (data[0] != 0xBF)
+                {
+                    Logger.Log("From Client: " + BitConverter.ToString(data, 0, bytesRead));
                     HandleClientPacket(data, bytesRead);
-                //Logger.Log("From Client: " + BitConverter.ToString(data, 0, bytesRead));
+                }
+                   
+                
                 //Todo parse packet stream, ability to filter certain packet.
                 Server.GetStream().Write(data, 0, bytesRead);
                 Server.GetStream().Flush();

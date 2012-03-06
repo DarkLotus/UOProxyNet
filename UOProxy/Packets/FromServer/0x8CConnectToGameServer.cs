@@ -26,6 +26,7 @@ namespace UOProxy.Packets.FromServer
                 IP = IPAddress.Loopback;
                 Data.Position = 1;
                 Data.Write(_ip, 0, 4);
+                UOProxy.UseHuffman = true;
                 //ToDo Add Port override
             }
             

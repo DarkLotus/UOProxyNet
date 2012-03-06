@@ -29,6 +29,13 @@ namespace UOProxy
             data = BitConverter.GetBytes(Value);
             this.Write(data, 0, 4);
         }
+
+        public void WriteUInt(uint Value)
+        {
+            byte[] data = new byte[4];
+            data = BitConverter.GetBytes(Value);
+            this.Write(data, 0, 4);
+        }
         public void WriteBit(byte Value)
         {
             this.Write(new byte[] { Value }, 0, 1);
@@ -179,5 +186,7 @@ namespace UOProxy
 
             return sb.ToString();
         }
+
+       
     }
 }

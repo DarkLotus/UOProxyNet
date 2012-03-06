@@ -35,6 +35,9 @@ namespace UOProxy
         public event DrawGamePlayerEventHandler _0x20DrawGamePlayer;
         public delegate void DrawGamePlayerEventHandler(_0x20DrawGamePlayer e);
 
+        public event CharMoveRejectionEventHandler _0x21CharMoveRejection;
+        public delegate void CharMoveRejectionEventHandler(_0x21CharMoveRejection e);
+
         public event MobAttributeEventHandler _0x2DMobAttributes;
         public delegate void MobAttributeEventHandler(_0x2DMobAttributes e);
 
@@ -46,6 +49,9 @@ namespace UOProxy
 
         public event SendGumpMenuDialogEventHandler _0xB0SendGumpMenuDialog;
         public delegate void SendGumpMenuDialogEventHandler(_0xB0SendGumpMenuDialog e);
+
+        public event ClilocMessageEventHandler _0xC1ClilocMessage;
+        public delegate void ClilocMessageEventHandler(_0xC1ClilocMessage e);
 
         public event MegaClilocEventHandler _0xD6MegaCliloc;
         public delegate void MegaClilocEventHandler(_0xD6MegaCliloc e);
@@ -90,10 +96,14 @@ namespace UOProxy
             HandlersServer.Add(0x1C, typeof(Packets.FromServer._0x1CSendSpeech));
             HandlersServer.Add(0x1D, typeof(Packets.FromServer._0x1DDeleteObject));
             HandlersServer.Add(0x20, typeof(Packets.FromServer._0x20DrawGamePlayer));
+            HandlersServer.Add(0x21, typeof(Packets.FromServer._0x21CharMoveRejection));
             HandlersServer.Add(0x2D, typeof(Packets.FromServer._0x2DMobAttributes));
+            HandlersServer.Add(0x4E, typeof(Packets.FromServer._0x4EPersonalLightLevel));
+            HandlersServer.Add(0x4F, typeof(Packets.FromServer._0x4FOverallLightLevel));
             HandlersServer.Add(0x77, typeof(Packets.FromServer._0x77UpdatePlayer));
             HandlersServer.Add(0x8c, typeof(Packets.FromServer._0x8CConnectToGameServer));
             HandlersServer.Add(0xB0, typeof(Packets.FromServer._0xB0SendGumpMenuDialog));
+            HandlersServer.Add(0xC1, typeof(Packets.FromServer._0xC1ClilocMessage));
             HandlersServer.Add(0xD6, typeof(Packets.FromServer._0xD6MegaCliloc));
             HandlersServer.Add(0xDD, typeof(Packets.FromServer._0xDDCompressedGump));
             HandlersServer.Add(0xF3, typeof(Packets.FromServer._0xF3ObjectInfo));

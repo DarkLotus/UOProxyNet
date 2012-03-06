@@ -9,6 +9,9 @@ namespace UOProxy
 {
     public partial class UOProxy
     {
+        public event MoveRequestEventHandler Client_0x02MoveRequest;
+        public delegate void MoveRequestEventHandler(Packets.FromClient._0x02MoveRequest e);
+
         public event RequestAttackEventHandler Client__0x05RequestAttack;
         public delegate void RequestAttackEventHandler(Packets.FromClient._0x05RequestAttack e);
 
@@ -18,15 +21,24 @@ namespace UOProxy
         public event PickUpItemEventHandler Client_0x07PickUpItem;
         public delegate void PickUpItemEventHandler(Packets.FromClient._0x07PickUpItem e);
 
+        public event DropItemEventHandler Client_0x08DropItem;
+        public delegate void DropItemEventHandler(Packets.FromClient._0x08DropItem e);
+
+        public event SingleClickEventHandler Client_0x09SingleClick;
+        public delegate void SingleClickEventHandler(Packets.FromClient._0x09SingleClick e);
+
         public event GumpMenuSelectionEventHandler Client_0xB1GumpMenuSelection;
         public delegate void GumpMenuSelectionEventHandler(Packets.FromClient._0xB1GumpMenuSelection e);
 
         public Dictionary<byte, Type> HandlersClient = new Dictionary<byte, Type>();
         private void SetupClientHandlers()
         {
+            HandlersClient.Add(0x02, typeof(Packets.FromClient._0x02MoveRequest));
             HandlersClient.Add(0x05, typeof(Packets.FromClient._0x05RequestAttack));
             HandlersClient.Add(0x06, typeof(Packets.FromClient._0x06DoubleClick));
             HandlersClient.Add(0x07, typeof(Packets.FromClient._0x07PickUpItem));
+            HandlersClient.Add(0x08, typeof(Packets.FromClient._0x08DropItem));
+            HandlersClient.Add(0x09, typeof(Packets.FromClient._0x09SingleClick));
             HandlersClient.Add(0xB1, typeof(Packets.FromClient._0xB1GumpMenuSelection));
             
         }

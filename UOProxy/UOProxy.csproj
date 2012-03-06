@@ -60,6 +60,8 @@
     <Compile Include="Packets\FromClient\0x06DoubleClick.cs" />
     <Compile Include="Packets\FromClient\0x07PickUpItem.cs" />
     <Compile Include="Packets\FromClient\0xB1GumpMenuSelection.cs" />
+    <Compile Include="Packets\FromClient\0x08DropItem.cs" />
+    <Compile Include="Packets\FromClient\0x09SingleClick.cs" />
     <Compile Include="Packets\FromServer\0x11StatusBarInfo.cs" />
     <Compile Include="Packets\FromServer\0x1AObjectInfo.cs" />
     <Compile Include="Packets\FromServer\0x1CSendSpeech.cs" />
@@ -78,6 +80,7 @@
     <Compile Include="Packets\FromServer\0x4EPersonalLightLevel.cs" />
     <Compile Include="Packets\FromServer\0x4FOverallLightLevel.cs" />
     <Compile Include="Packets\FromServer\0xC1ClilocMessage.cs" />
+    <Compile Include="Packets\FromServer\0x21CharMoveRejection.cs" />
     <Compile Include="Packets\Packet.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UOStream.cs" />

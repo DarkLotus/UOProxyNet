@@ -34,7 +34,10 @@ namespace UOProxyTestApp
 
                 }
             }
+            UOProxy.Logger.SaveLog();
         }
+
+        
 
         static void proxy__0xB1GumpMenuSelection(UOProxy.Packets.FromClient._0xB1GumpMenuSelection e)
         {

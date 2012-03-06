@@ -28,7 +28,7 @@ namespace UOProxy.Packets.FromServer
             font = Data.ReadShort();
             MessageNumber = Data.ReadInt();
             SpeakerName = Data.ReadString(30);
-            _args = Data.ReadUnicodeStringLE();
+            _args = Data.ReadNullTermString();
             Message = Helpers.Cliloc.constructCliLoc(Helpers.Cliloc.Table[MessageNumber].ToString(), _args);
         }
 

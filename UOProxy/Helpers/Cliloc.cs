@@ -102,7 +102,16 @@ namespace UOProxy.Helpers
                 iArgs[i] = iArgs[i].Replace("\0", "");
                 if ((iArgs[i].Length > 0) && (iArgs[i].Substring(0, 1) == "#"))
                 {
-                    int clilocID = Convert.ToInt32(iArgs[i].Substring(1));
+                    int clilocID = 0;
+                    if (iArgs[i].Contains("<"))
+                    {
+                        clilocID = Convert.ToInt32(iArgs[i].Substring(1).Split(new string[] { "<" }, StringSplitOptions.RemoveEmptyEntries).First());
+                    }
+                    else 
+                    { 
+                        clilocID = Convert.ToInt32(iArgs[i].Substring(1));
+                    }
+                    
                     iArgs[i] = Helpers.Cliloc.Table[clilocID].ToString();
                 }
             }

@@ -38,7 +38,7 @@ namespace UOProxy.Packets.FromServer
 
                 if(textlen > 0)
                 {
-                    string _args = Data.ReadUnicodeStringLE(textlen);
+                    string _args = Data.ReadString(textlen);
                     Cliocs.Add(Helpers.Cliloc.constructCliLoc(Helpers.Cliloc.Table[MessageNumber].ToString(), _args));
                 }
                    

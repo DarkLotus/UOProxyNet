@@ -87,37 +87,37 @@ namespace UOProxy
 
         public string Read30CharString()
         {
-            char[] mystring = new char[30];
+            byte[] mystring = new byte[30];
             for (int i = 0; i < 30; i++)
             {
-                mystring[i] = (char)this.ReadBit();
+                mystring[i] = this.ReadBit();
             }
-            return new string(mystring);
+            return UTF8Encoding.UTF8.GetString(mystring);
         }
         public string ReadString(int bytesToRead)
         {
-            char[] mystring = new char[bytesToRead];
+            byte[] mystring = new byte[bytesToRead];
             for (int i = 0; i < bytesToRead; i++)
             {
-                mystring[i] = (char)this.ReadBit();
+                mystring[i] = this.ReadBit();
             }
-            return new string(mystring);
+            return UTF8Encoding.UTF8.GetString(mystring);
         }
         public string ReadNullTermString()
         {
             byte current;
             byte previous = 1;
-            List<char> ms = new List<char>();
+            List<byte> ms = new List<byte>();
             while (true)
             {
                 current = this.ReadBit();
                 if (current == 0x00 && previous == 0x00) // Reads untill null terminated
                     break;
-                ms.Add((char)current);
+                ms.Add((byte)current);
                 previous = (byte)(current + 0);
 
             }
-            return new string(ms.ToArray());
+            return UTF8Encoding.UTF8.GetString(ms.ToArray());
             
         }
 

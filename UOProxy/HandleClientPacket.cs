@@ -40,6 +40,10 @@ namespace UOProxy
             HandlersClient.Add(0x08, typeof(Packets.FromClient._0x08DropItem));
             HandlersClient.Add(0x09, typeof(Packets.FromClient._0x09SingleClick));
             HandlersClient.Add(0xB1, typeof(Packets.FromClient._0xB1GumpMenuSelection));
+
+
+            HandlersClient.Add(0x6c, typeof(Packets.FromBoth._0x6CTargetCursorCommands));
+            HandlersClient.Add(0x73, typeof(Packets.FromBoth._0x73Ping));
             
         }
         private void HandleClientPacket(byte[] data, int bytesRead)

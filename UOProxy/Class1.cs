@@ -190,10 +190,3 @@ namespace UOProxy
      
     }
 }
-/*
- Proxy function passes thru all messages from/to real client
- * 
- 
- 
- 
- */

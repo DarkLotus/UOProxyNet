@@ -7,6 +7,7 @@ using UOProxy.Packets;
 using System.Net.Sockets;
 using System.ComponentModel.Design;
 using System.Reflection;
+using UOProxy.Packets.FromBoth;
 namespace UOProxy
 {
     public partial class UOProxy
@@ -38,8 +39,15 @@ namespace UOProxy
         public event CharMoveRejectionEventHandler _0x21CharMoveRejection;
         public delegate void CharMoveRejectionEventHandler(_0x21CharMoveRejection e);
 
+        public event MoveAckEventHandler _0x22MoveAck;
+        public delegate void MoveAckEventHandler(Packets.FromBoth._0x22MoveAck e);
+
         public event MobAttributeEventHandler _0x2DMobAttributes;
         public delegate void MobAttributeEventHandler(_0x2DMobAttributes e);
+
+
+        public event PingEventHandler _0x73Ping;
+        public delegate void PingEventHandler(Packets.FromBoth._0x73Ping e);
 
         public event UpdatePlayerEventHandler _0x77UpdatePlayer;
         public delegate void UpdatePlayerEventHandler(_0x77UpdatePlayer e);
@@ -58,6 +66,9 @@ namespace UOProxy
 
         public event CompressedGumpEventHandler _0xDDCompressedGump;
         public delegate void CompressedGumpEventHandler(_0xDDCompressedGump e);
+
+        public event UpdateMobileStatusEventHandler _0xDEUpdateMobileStatus;
+        public delegate void UpdateMobileStatusEventHandler(_0xDEUpdateMobileStatus e);
 
         public event F3ObjectInfoEventHandler _0xF3ObjectInfo;
         public delegate void F3ObjectInfoEventHandler(_0xF3ObjectInfo e);
@@ -88,6 +99,12 @@ namespace UOProxy
         private void SetupHandlers()
         {
             HandlersServer.Clear();
+            HandlersClient.Clear();
+            HandlersServer.Add(0x22, typeof(Packets.FromBoth._0x22MoveAck));
+            HandlersServer.Add(0x6c, typeof(Packets.FromBoth._0x6CTargetCursorCommands));
+            HandlersServer.Add(0x73, typeof(Packets.FromBoth._0x73Ping));
+           
+
             HandlersServer.Add(0x0B, typeof(Packets.FromServer._0x0BDamage));
             HandlersServer.Add(0x11, typeof(Packets.FromServer._0x11StatusBarInfo));
             HandlersServer.Add(0x16, typeof(Packets.FromServer._0x16StatusBarUpdate));
@@ -106,6 +123,7 @@ namespace UOProxy
             HandlersServer.Add(0xC1, typeof(Packets.FromServer._0xC1ClilocMessage));
             HandlersServer.Add(0xD6, typeof(Packets.FromServer._0xD6MegaCliloc));
             HandlersServer.Add(0xDD, typeof(Packets.FromServer._0xDDCompressedGump));
+            HandlersServer.Add(0xDE, typeof(Packets.FromServer._0xDEUpdateMobileStatus));
             HandlersServer.Add(0xF3, typeof(Packets.FromServer._0xF3ObjectInfo));
             SetupClientHandlers();
 
@@ -152,7 +170,7 @@ namespace UOProxy
             }
             else
             {
-                Logger.Log(data[0].ToString("x") + "No Handler");
+                Logger.Log(data[0].ToString("x") + "No Server Handler");
             }
             return;
             while (Data.Position < Data.Length)

@@ -63,11 +63,9 @@ namespace UOProxy
                 if (client.Available <= 0)
                     continue;
                 int bytesRead = ClientStream.Read(data, 0, client.Available);
-                if (data[0] != 0xBF)
-                {
-                    Logger.Log("From Client: " + BitConverter.ToString(data, 0, bytesRead));
+                    //Logger.Log("From Client: " + BitConverter.ToString(data, 0, bytesRead));
                     HandleClientPacket(data, bytesRead);
-                }
+                
                    
                 
                 //Todo parse packet stream, ability to filter certain packet.
@@ -132,7 +130,7 @@ namespace UOProxy
                 else
                 {
                     HandlePacketFromServer(data, TcpClients.client);
-                    Logger.Log("From Server NoHuff: " + BitConverter.ToString(data, 0, bytesRead));
+                    //Logger.Log("From Server NoHuff: " + BitConverter.ToString(data, 0, bytesRead));
 
                     if (TcpClients.client != null)
                     TcpClients.client.GetStream().Write(data, 0, bytesRead);

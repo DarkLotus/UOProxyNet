@@ -63,6 +63,8 @@
     <Compile Include="Packets\FromClient\0xB1GumpMenuSelection.cs" />
     <Compile Include="Packets\FromClient\0x08DropItem.cs" />
     <Compile Include="Packets\FromClient\0x09SingleClick.cs" />
+    <Compile Include="Packets\FromClient\0x80LoginRequest.cs" />
+    <Compile Include="Packets\FromClient\0x91GameServerLogin.cs" />
     <Compile Include="Packets\FromServer\0x11StatusBarInfo.cs" />
     <Compile Include="Packets\FromServer\0x1AObjectInfo.cs" />
     <Compile Include="Packets\FromServer\0x1CSendSpeech.cs" />
@@ -85,6 +87,7 @@
     <Compile Include="Packets\FromBoth\0x6CTargetCursorCommands.cs" />
     <Compile Include="Packets\FromServer\0xDEUpdateMobileStatus.cs" />
     <Compile Include="Packets\FromBoth\0x22MoveAck.cs" />
+    <Compile Include="Packets\FromServer\0x2EWornItem.cs" />
     <Compile Include="Packets\Packet.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UOStream.cs" />

@@ -45,6 +45,8 @@ namespace UOProxy
         public event MobAttributeEventHandler _0x2DMobAttributes;
         public delegate void MobAttributeEventHandler(_0x2DMobAttributes e);
 
+        public event WornItemEventHandler _0x2EWornItem;
+        public delegate void WornItemEventHandler(_0x2EWornItem e);
 
         public event PingEventHandler _0x73Ping;
         public delegate void PingEventHandler(Packets.FromBoth._0x73Ping e);
@@ -115,6 +117,7 @@ namespace UOProxy
             HandlersServer.Add(0x20, typeof(Packets.FromServer._0x20DrawGamePlayer));
             HandlersServer.Add(0x21, typeof(Packets.FromServer._0x21CharMoveRejection));
             HandlersServer.Add(0x2D, typeof(Packets.FromServer._0x2DMobAttributes));
+            HandlersServer.Add(0x2E, typeof(Packets.FromServer._0x2EWornItem));
             HandlersServer.Add(0x4E, typeof(Packets.FromServer._0x4EPersonalLightLevel));
             HandlersServer.Add(0x4F, typeof(Packets.FromServer._0x4FOverallLightLevel));
             HandlersServer.Add(0x77, typeof(Packets.FromServer._0x77UpdatePlayer));

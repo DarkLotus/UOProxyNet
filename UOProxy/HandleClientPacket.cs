@@ -27,6 +27,12 @@ namespace UOProxy
         public event SingleClickEventHandler Client_0x09SingleClick;
         public delegate void SingleClickEventHandler(Packets.FromClient._0x09SingleClick e);
 
+        public event LoginRequestEventHandler Client_0x80LoginRequest;
+        public delegate void LoginRequestEventHandler(Packets.FromClient._0x80LoginRequest e);
+
+        public event GameServerLoginEventHandler Client_0x91GameServerLogin;
+        public delegate void GameServerLoginEventHandler(Packets.FromClient._0x91GameServerLogin e);
+
         public event GumpMenuSelectionEventHandler Client_0xB1GumpMenuSelection;
         public delegate void GumpMenuSelectionEventHandler(Packets.FromClient._0xB1GumpMenuSelection e);
 
@@ -39,6 +45,8 @@ namespace UOProxy
             HandlersClient.Add(0x07, typeof(Packets.FromClient._0x07PickUpItem));
             HandlersClient.Add(0x08, typeof(Packets.FromClient._0x08DropItem));
             HandlersClient.Add(0x09, typeof(Packets.FromClient._0x09SingleClick));
+            HandlersClient.Add(0x80, typeof(Packets.FromClient._0x80LoginRequest));
+            HandlersClient.Add(0x91, typeof(Packets.FromClient._0x91GameServerLogin));
             HandlersClient.Add(0xB1, typeof(Packets.FromClient._0xB1GumpMenuSelection));
 
 

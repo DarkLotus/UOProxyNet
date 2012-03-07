@@ -33,6 +33,9 @@ namespace UOProxy
         public event GameServerLoginEventHandler Client_0x91GameServerLogin;
         public delegate void GameServerLoginEventHandler(Packets.FromClient._0x91GameServerLogin e);
 
+        public event SelectServerEventHandler Client_0xA0SelectServer;
+        public delegate void SelectServerEventHandler(Packets.FromClient._0xA0SelectServer e);
+
         public event GumpMenuSelectionEventHandler Client_0xB1GumpMenuSelection;
         public delegate void GumpMenuSelectionEventHandler(Packets.FromClient._0xB1GumpMenuSelection e);
 
@@ -47,11 +50,14 @@ namespace UOProxy
             HandlersClient.Add(0x09, typeof(Packets.FromClient._0x09SingleClick));
             HandlersClient.Add(0x80, typeof(Packets.FromClient._0x80LoginRequest));
             HandlersClient.Add(0x91, typeof(Packets.FromClient._0x91GameServerLogin));
+            HandlersClient.Add(0xA0, typeof(Packets.FromClient._0xA0SelectServer));
             HandlersClient.Add(0xB1, typeof(Packets.FromClient._0xB1GumpMenuSelection));
 
 
             HandlersClient.Add(0x6c, typeof(Packets.FromBoth._0x6CTargetCursorCommands));
             HandlersClient.Add(0x73, typeof(Packets.FromBoth._0x73Ping));
+            HandlersClient.Add(0xBD, typeof(Packets.FromBoth._0xBDClientVersion));
+            HandlersClient.Add(0xC8, typeof(Packets.FromBoth._0xC8ClientViewRange));
             
         }
         private void HandleClientPacket(byte[] data, int bytesRead)
@@ -83,14 +89,18 @@ namespace UOProxy
                 {
                     Logger.Log("EVENTFIELD WAS NULL FOR PACKET : " + packet.ToString());
                 }
-                if (data[0] == 0x8c)
-                { UOProxy.UseHuffman = true; }
+                /*if (data[0] == 0x8c)
+                { UOProxy.UseHuffman = true; }*/
                 return;
             }
             else
             {
-                Logger.Log(data[0].ToString("x") + "No Client Handler");
+
                 
+                if(data[0] == 0xBF)
+                Logger.Log(data[0].ToString("x") + "sub:" + data[4].ToString("x") + "No Client Handler");
+                else
+                    Logger.Log(data[0].ToString("x") + "No Client Handler");
             }
         }
     }

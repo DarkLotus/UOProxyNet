@@ -49,7 +49,7 @@ namespace UOProxy
         public void WriteString(string Value,int RequiredLength)
         {
             //RequiredLength 0 if you dont need padding.
-            System.Text.ASCIIEncoding encoding = new System.Text.ASCIIEncoding();
+            System.Text.UnicodeEncoding encoding = new System.Text.UnicodeEncoding();
             if (RequiredLength == 0)
             {
                 byte[] Data = encoding.GetBytes(Value);

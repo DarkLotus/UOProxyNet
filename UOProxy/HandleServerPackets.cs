@@ -57,6 +57,9 @@ namespace UOProxy
         public event ConnectToGameServerEventHandler _0x8CConnectToGameServer;
         public delegate void ConnectToGameServerEventHandler(_0x8CConnectToGameServer e);
 
+        public event UnicodeSpeechEventHandler _0xAEUnicodeSpeech;
+        public delegate void UnicodeSpeechEventHandler(_0xAEUnicodeSpeech e);
+
         public event SendGumpMenuDialogEventHandler _0xB0SendGumpMenuDialog;
         public delegate void SendGumpMenuDialogEventHandler(_0xB0SendGumpMenuDialog e);
 
@@ -65,6 +68,9 @@ namespace UOProxy
 
         public event MegaClilocEventHandler _0xD6MegaCliloc;
         public delegate void MegaClilocEventHandler(_0xD6MegaCliloc e);
+
+        public event SERevisionEventHandler _0xDCSERevision;
+        public delegate void SERevisionEventHandler(_0xDCSERevision e);
 
         public event CompressedGumpEventHandler _0xDDCompressedGump;
         public delegate void CompressedGumpEventHandler(_0xDDCompressedGump e);
@@ -105,7 +111,8 @@ namespace UOProxy
             HandlersServer.Add(0x22, typeof(Packets.FromBoth._0x22MoveAck));
             HandlersServer.Add(0x6c, typeof(Packets.FromBoth._0x6CTargetCursorCommands));
             HandlersServer.Add(0x73, typeof(Packets.FromBoth._0x73Ping));
-           
+            HandlersServer.Add(0xBD, typeof(Packets.FromBoth._0xBDClientVersion));
+            HandlersServer.Add(0xC8, typeof(Packets.FromBoth._0xC8ClientViewRange));
 
             HandlersServer.Add(0x0B, typeof(Packets.FromServer._0x0BDamage));
             HandlersServer.Add(0x11, typeof(Packets.FromServer._0x11StatusBarInfo));
@@ -122,9 +129,11 @@ namespace UOProxy
             HandlersServer.Add(0x4F, typeof(Packets.FromServer._0x4FOverallLightLevel));
             HandlersServer.Add(0x77, typeof(Packets.FromServer._0x77UpdatePlayer));
             HandlersServer.Add(0x8c, typeof(Packets.FromServer._0x8CConnectToGameServer));
+            HandlersServer.Add(0xAE, typeof(Packets.FromServer._0xAEUnicodeSpeech));
             HandlersServer.Add(0xB0, typeof(Packets.FromServer._0xB0SendGumpMenuDialog));
             HandlersServer.Add(0xC1, typeof(Packets.FromServer._0xC1ClilocMessage));
             HandlersServer.Add(0xD6, typeof(Packets.FromServer._0xD6MegaCliloc));
+            HandlersServer.Add(0xDC, typeof(Packets.FromServer._0xDCSERevision));
             HandlersServer.Add(0xDD, typeof(Packets.FromServer._0xDDCompressedGump));
             HandlersServer.Add(0xDE, typeof(Packets.FromServer._0xDEUpdateMobileStatus));
             HandlersServer.Add(0xF3, typeof(Packets.FromServer._0xF3ObjectInfo));
@@ -173,6 +182,9 @@ namespace UOProxy
             }
             else
             {
+                if (data[0] == 0xBF)
+                    Logger.Log(data[0].ToString("x") + "sub:" + data[3].ToString("x") + "No Server Handler");
+                else
                 Logger.Log(data[0].ToString("x") + "No Server Handler");
             }
             return;

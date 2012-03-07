@@ -42,11 +42,20 @@ namespace UOProxy
         public event MoveAckEventHandler _0x22MoveAck;
         public delegate void MoveAckEventHandler(Packets.FromBoth._0x22MoveAck e);
 
+        public event DrawContainerEventHandler _0x24DrawContainer;
+        public delegate void DrawContainerEventHandler(_0x24DrawContainer e);
+
+        public event AddItemToContainerEventHandler _0x25AddItemToContainer;
+        public delegate void AddItemToContainerEventHandler(_0x25AddItemToContainer e);
+
         public event MobAttributeEventHandler _0x2DMobAttributes;
         public delegate void MobAttributeEventHandler(_0x2DMobAttributes e);
 
         public event WornItemEventHandler _0x2EWornItem;
         public delegate void WornItemEventHandler(_0x2EWornItem e);
+
+        public event AddMultipleItemsToContainerEventHandler _0x3CAddMultipleItemsToContainer;
+        public delegate void AddMultipleItemsToContainerEventHandler(_0x3CAddMultipleItemsToContainer e);
 
         public event PingEventHandler _0x73Ping;
         public delegate void PingEventHandler(Packets.FromBoth._0x73Ping e);
@@ -84,26 +93,10 @@ namespace UOProxy
 
         public event AAAAEventHandler EventAAA;
         public delegate void AAAAEventHandler(Packet e);
-        //public EventDictionary HandlersEvents = new EventDictionary();
-        public Dictionary<byte, Type> HandlersServer = new Dictionary<byte, Type>();
-        internal class EventDictionary : Dictionary<byte,EventHandler>
-        {
-            public void Add(byte key,EventHandler e)
-            {
-                if (e == null)
-                    throw new ArgumentException("Event Handler cannot be null.",
-                        "e");
-                //string s = e.Target.GetType().GetEvents()[0].ToString();
-                base.Add(key, e);
-            }
 
-            internal void Add(int p, ConnectToGameServerEventHandler connectToGameServerEventHandler)
-            {
-                
-                throw new NotImplementedException();
-            }
-        }
 
+        private Dictionary<byte, Type> HandlersServer = new Dictionary<byte, Type>();
+        
         private void SetupHandlers()
         {
             HandlersServer.Clear();
@@ -123,14 +116,19 @@ namespace UOProxy
             HandlersServer.Add(0x1D, typeof(Packets.FromServer._0x1DDeleteObject));
             HandlersServer.Add(0x20, typeof(Packets.FromServer._0x20DrawGamePlayer));
             HandlersServer.Add(0x21, typeof(Packets.FromServer._0x21CharMoveRejection));
+            HandlersServer.Add(0x24, typeof(Packets.FromServer._0x24DrawContainer));
+            HandlersServer.Add(0x25, typeof(Packets.FromServer._0x25AddItemToContainer));
             HandlersServer.Add(0x2D, typeof(Packets.FromServer._0x2DMobAttributes));
             HandlersServer.Add(0x2E, typeof(Packets.FromServer._0x2EWornItem));
+            HandlersServer.Add(0x3c, typeof(Packets.FromServer._0x3CAddMultipleItemsToContainer));
             HandlersServer.Add(0x4E, typeof(Packets.FromServer._0x4EPersonalLightLevel));
             HandlersServer.Add(0x4F, typeof(Packets.FromServer._0x4FOverallLightLevel));
+            HandlersServer.Add(0x6E, typeof(Packets.FromServer._0x6ECharacterAnimation));
             HandlersServer.Add(0x77, typeof(Packets.FromServer._0x77UpdatePlayer));
             HandlersServer.Add(0x8c, typeof(Packets.FromServer._0x8CConnectToGameServer));
             HandlersServer.Add(0xAE, typeof(Packets.FromServer._0xAEUnicodeSpeech));
             HandlersServer.Add(0xB0, typeof(Packets.FromServer._0xB0SendGumpMenuDialog));
+            HandlersServer.Add(0xB9, typeof(Packets.FromServer._0xB9EnableLockedClientFeatures));
             HandlersServer.Add(0xC1, typeof(Packets.FromServer._0xC1ClilocMessage));
             HandlersServer.Add(0xD6, typeof(Packets.FromServer._0xD6MegaCliloc));
             HandlersServer.Add(0xDC, typeof(Packets.FromServer._0xDCSERevision));

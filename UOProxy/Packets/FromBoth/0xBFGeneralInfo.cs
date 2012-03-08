@@ -7,13 +7,30 @@ namespace UOProxy.Packets.FromBoth
 {
     public class _0xBFGeneralInfo : Packet
     {
-        public byte Seq, Notoriety;
+        short _length;
+        public short SubCommand;
         public _0xBFGeneralInfo(UOStream Data)
             : base(Data)
         {
-            Seq = Data.ReadBit();
-            Notoriety = Data.ReadBit();         
+            _length = Data.ReadShort();
+            SubCommand = Data.ReadShort();
+            switch (SubCommand)
+            {
+                case 0x22:
+                    Data.ReadShort();// Unknown short;
+                    int Serial = Data.ReadInt();
+                    byte Damage = Data.ReadBit();
+                    break;
+                case 0x24:
+                    byte unknown = Data.ReadBit();// Unknown
+                    break;
+                default:
+                    Logger.Log("Unhandled 0xBF: " + SubCommand);
+                    break;
+            }
         }
+
+
         public _0xBFGeneralInfo(byte seq, byte notor)
             : base(0xBF)
         {
@@ -22,4 +39,4 @@ namespace UOProxy.Packets.FromBoth
         }
     }
 }
-//TODO 
+//TODO Finish this class, maybe sub classes for each subcommand? or keep switch

@@ -59,6 +59,7 @@
     <Compile Include="Packets\FromBoth\0x73Ping.cs" />
     <Compile Include="Packets\FromBoth\0xBFGeneralInfo.cs" />
     <Compile Include="Packets\FromBoth\0xBDClientVersion.cs" />
+    <Compile Include="Packets\FromBoth\0x72RequestWarMode.cs" />
     <Compile Include="Packets\FromClient\0x02MoveRequest.cs" />
     <Compile Include="Packets\FromClient\0x05RequestAttack.cs" />
     <Compile Include="Packets\FromClient\0x06DoubleClick.cs" />
@@ -69,6 +70,7 @@
     <Compile Include="Packets\FromClient\0x80LoginRequest.cs" />
     <Compile Include="Packets\FromClient\0x91GameServerLogin.cs" />
     <Compile Include="Packets\FromClient\0xA0SelectServer.cs" />
+    <Compile Include="Packets\FromClient\0xECEquipMacroKR.cs" />
     <Compile Include="Packets\FromServer\0x11StatusBarInfo.cs" />
     <Compile Include="Packets\FromServer\0x1AObjectInfo.cs" />
     <Compile Include="Packets\FromServer\0x1CSendSpeech.cs" />

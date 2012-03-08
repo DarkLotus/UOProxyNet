@@ -28,7 +28,7 @@ namespace UOProxy.Packets.FromServer
                 byte Index = Data.ReadBit();
                 int ContainerSerial = Data.ReadInt();
                 short Hue = Data.ReadShort();
-                Items.Add(new Item(Serial,GraphicID,Amount,X,Y,Index,ContainerSerial,Hue);
+                Items.Add(new Item(Serial,GraphicID,Amount,X,Y,Index,ContainerSerial,Hue));
             }
            
         }

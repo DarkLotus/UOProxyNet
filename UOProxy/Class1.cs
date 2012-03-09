@@ -109,7 +109,7 @@ namespace UOProxy
                 Thread.Sleep(5);
                 if (TcpClients.server.Available <= 0)
                     continue;
-                int bytesRead = ServerStream.Read(TempdataBuffer, 0, TcpClients.server.Available);
+                int bytesRead = ServerStream.Read(TempdataBuffer, 0, 8192);
 
                 byte[] data = new byte[bytesRead];
                 Array.Copy(TempdataBuffer, 0, data, 0, bytesRead);

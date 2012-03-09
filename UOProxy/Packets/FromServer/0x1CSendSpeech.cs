@@ -23,7 +23,7 @@ namespace UOProxy.Packets.FromServer
             TypeOfText = Data.ReadBit();
             TextColor = Data.ReadShort();
             Font = Data.ReadShort();
-            Name = Data.Read30CharString(); // try normal read?
+            Name = Data.ReadString(30); // try normal read?
             Message = Data.ReadNullTermString();
         }
     }

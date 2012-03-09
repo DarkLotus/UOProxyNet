@@ -122,6 +122,7 @@ namespace UOProxy
             HandlersServer.Add(0x6c, typeof(Packets.FromBoth._0x6CTargetCursorCommands));
             HandlersServer.Add(0x73, typeof(Packets.FromBoth._0x73Ping));
             HandlersServer.Add(0xBD, typeof(Packets.FromBoth._0xBDClientVersion));
+            HandlersServer.Add(0xBF, typeof(Packets.FromBoth._0xBFGeneralInfo));
             HandlersServer.Add(0xC8, typeof(Packets.FromBoth._0xC8ClientViewRange));
 
             HandlersServer.Add(0x0B, typeof(Packets.FromServer._0x0BDamage));
@@ -143,6 +144,7 @@ namespace UOProxy
             HandlersServer.Add(0x6E, typeof(Packets.FromServer._0x6ECharacterAnimation));
             HandlersServer.Add(0x77, typeof(Packets.FromServer._0x77UpdatePlayer));
             HandlersServer.Add(0x8c, typeof(Packets.FromServer._0x8CConnectToGameServer));
+            HandlersServer.Add(0xA9, typeof(Packets.FromServer._0xA9CharStartingLocation));
             HandlersServer.Add(0xAE, typeof(Packets.FromServer._0xAEUnicodeSpeech));
             HandlersServer.Add(0xB0, typeof(Packets.FromServer._0xB0SendGumpMenuDialog));
             HandlersServer.Add(0xB9, typeof(Packets.FromServer._0xB9EnableLockedClientFeatures));
@@ -178,7 +180,7 @@ namespace UOProxy
                     var member = eventinfo.GetValue(this);
                     if (member != null)
                     {
-                        Logger.Log(member.ToString());
+                        //Logger.Log(member.ToString());
                         member.GetType().GetMethod("Invoke").Invoke(member, new object[] { packet });
                     }
                     else
@@ -189,7 +191,7 @@ namespace UOProxy
                 }
                 else
                 {
-                    Logger.Log("EVENTFIELD WAS NULL FOR PACKET : " + packet.ToString());
+                    //Logger.Log("EVENTFIELD WAS NULL FOR PACKET : " + packet.ToString());
                 }
                 /*if (data[0] == 0x8c)
                 { UOProxy.UseHuffman = true; }
@@ -197,9 +199,7 @@ namespace UOProxy
             }
             else
             {
-                if (data[0] == 0xBF)
-                    Logger.Log(data[0].ToString("x") + "sub:" + data[3].ToString("x") + "No Server Handler");
-                else
+ 
                 Logger.Log(data[0].ToString("x") + "No Server Handler");
             }
             return;

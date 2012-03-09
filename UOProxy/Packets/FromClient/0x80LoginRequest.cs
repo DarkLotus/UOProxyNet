@@ -12,8 +12,8 @@ namespace UOProxy.Packets.FromClient
         public _0x80LoginRequest(UOStream data)
             : base(data)
         {
-            AccountName = Data.ReadString(30);
-            Password = Data.ReadString(30);
+            AccountName = Data.ReadString(30).Replace("\0", "");
+            Password = Data.ReadString(30).Replace("\0","");
             Key = Data.ReadBit();
         }
 

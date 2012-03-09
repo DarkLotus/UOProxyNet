@@ -96,29 +96,33 @@ namespace UOProxy
             return results[0];
         }
 
+        public byte[] ReadBytes(int NumToRead)
+        {
+            byte[] results = new byte[NumToRead]; this.Read(results, 0, NumToRead);
+            return results;
+        }
+
         public short ReadShort()
         {
             byte[] results = new byte[2]; this.Read(results, 0, 2);
             return (short)(results[0] << 8 | results[1]);
         }
 
-        public string Read30CharString()
-        {
-            byte[] mystring = new byte[30];
-            for (int i = 0; i < 30; i++)
-            {
-                mystring[i] = this.ReadBit();
-            }
-            return UTF8Encoding.UTF8.GetString(mystring);
-        }
         public string ReadString(int bytesToRead)
         {
             byte[] mystring = new byte[bytesToRead];
+            StringBuilder sb = new StringBuilder();
             for (int i = 0; i < bytesToRead; i++)
             {
-                mystring[i] = this.ReadBit();
+                //mystring[i] = this.ReadBit();
+                byte temp = this.ReadBit();
+                //byte temp2 = this.ReadBit();
+                //char mychar = (char)((temp << 8) | (temp2));
+                if(temp > 0)
+                sb.Append((char)temp);
             }
-            return UTF8Encoding.UTF8.GetString(mystring);
+            return sb.ToString();
+            return UTF8Encoding.UTF8.GetString(mystring).Replace("\0", "");
         }
         public string ReadNullTermString()
         {
@@ -134,77 +138,10 @@ namespace UOProxy
                 previous = (byte)(current + 0);
 
             }
-            return UTF8Encoding.UTF8.GetString(ms.ToArray());
+            return UTF8Encoding.UTF8.GetString(ms.ToArray()).Replace("\0","");
             
         }
 
-        public string ReadUnicodeString()
-        {
-            StringBuilder sb = new StringBuilder();
-            _index = (int)this.Position;
-            int c;
-            
-            while ((_index + 1) < _length && (c = ((_buffer[_index++] << 8) | _buffer[_index++])) != 0)
-                sb.Append((char)c);
-
-            return sb.ToString();
-        }
-        public string ReadUnicodeStringLE()
-        {
-            StringBuilder sb = new StringBuilder();
-            _index = (int)this.Position;
-            int c;
-
-            while ((_index + 1) < _length && (c = (_buffer[_index++] | (_buffer[_index++] << 8))) != 0)
-                sb.Append((char)c);
-
-            return sb.ToString();
-        }
-        public string ReadUnicodeStringLE(int fixedLength)
-        {
-            _index = (int)this.Position;
-            int bound = _index + (fixedLength << 1);
-            int end = bound;
-
-            if (bound > _length)
-                bound = _length;
-
-            StringBuilder sb = new StringBuilder();
-
-            int c;
-
-            while ((_index + 1) < bound && (c = (_buffer[_index++] | (_buffer[_index++] << 8))) != 0)
-            {
-                    sb.Append((char)c);
-            }
-
-            _index = end;
-
-            return sb.ToString();
-        }
-        public string ReadUnicodeString(int fixedLength)
-        {
-            _index = (int)this.Position;
-            int bound = _index + (fixedLength << 1);
-            int end = bound;
-
-            if (bound > _length)
-                bound = _length;
-
-            StringBuilder sb = new StringBuilder();
-
-            int c;
-
-            while ((_index + 1) < bound && (c = ((_buffer[_index++] << 8) | _buffer[_index++])) != 0)
-            {
-                //if (IsSafeChar(c))
-                    sb.Append((char)c);
-            }
-
-            _index = end;
-
-            return sb.ToString();
-        }
 
        
     }

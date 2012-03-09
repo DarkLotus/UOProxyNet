@@ -70,12 +70,13 @@ namespace UOProxy
             HandlersClient.Add(0xA0, typeof(Packets.FromClient._0xA0SelectServer));
             HandlersClient.Add(0xB1, typeof(Packets.FromClient._0xB1GumpMenuSelection));
             HandlersClient.Add(0xEC, typeof(Packets.FromClient._0xECEquipMacroKR));
-
+            HandlersClient.Add(0xEF, typeof(Packets.FromClient._0xEFClientLoginSeed));
 
             HandlersClient.Add(0x6c, typeof(Packets.FromBoth._0x6CTargetCursorCommands));
             HandlersClient.Add(0x73, typeof(Packets.FromBoth._0x73Ping));
             HandlersClient.Add(0xBD, typeof(Packets.FromBoth._0xBDClientVersion));
             HandlersClient.Add(0xC8, typeof(Packets.FromBoth._0xC8ClientViewRange));
+            HandlersClient.Add(0xBF, typeof(Packets.FromBoth._0xBFGeneralInfo));
             
         }
         private void HandleClientPacket(byte[] data, int bytesRead)
@@ -94,7 +95,7 @@ namespace UOProxy
                     var member = eventinfo.GetValue(this);
                     if (member != null)
                     {
-                        Logger.Log(member.ToString());
+                        //Logger.Log(member.ToString());
                         member.GetType().GetMethod("Invoke").Invoke(member, new object[] { packet });
                     }
                     else
@@ -105,7 +106,7 @@ namespace UOProxy
                 }
                 else
                 {
-                    Logger.Log("EVENTFIELD WAS NULL FOR PACKET : " + packet.ToString());
+                   // Logger.Log("EVENTFIELD WAS NULL FOR PACKET : " + packet.ToString());
                 }
                 /*if (data[0] == 0x8c)
                 { UOProxy.UseHuffman = true; }*/
@@ -113,11 +114,6 @@ namespace UOProxy
             }
             else
             {
-
-                
-                if(data[0] == 0xBF)
-                Logger.Log(data[0].ToString("x") + "sub:" + data[4].ToString("x") + "No Client Handler");
-                else
                     Logger.Log(data[0].ToString("x") + "No Client Handler");
             }
         }

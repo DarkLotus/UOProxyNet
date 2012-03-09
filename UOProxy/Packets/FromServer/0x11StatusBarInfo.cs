@@ -37,7 +37,7 @@ namespace UOProxy.Packets.FromServer
         {
             Length = Data.ReadShort();
             PlayerID = Data.ReadInt();
-            PlayerName = Data.Read30CharString();
+            PlayerName = Data.ReadString(30);
             HitsCurrent = Data.ReadShort();
             NameChangeFlag = Data.ReadBit();
             StatusFlag = Data.ReadBit();

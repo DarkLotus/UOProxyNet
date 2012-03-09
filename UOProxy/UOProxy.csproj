@@ -71,6 +71,7 @@
     <Compile Include="Packets\FromClient\0x91GameServerLogin.cs" />
     <Compile Include="Packets\FromClient\0xA0SelectServer.cs" />
     <Compile Include="Packets\FromClient\0xECEquipMacroKR.cs" />
+    <Compile Include="Packets\FromClient\0xEFClientLoginSeed.cs" />
     <Compile Include="Packets\FromServer\0x11StatusBarInfo.cs" />
     <Compile Include="Packets\FromServer\0x1AObjectInfo.cs" />
     <Compile Include="Packets\FromServer\0x1CSendSpeech.cs" />
@@ -102,6 +103,7 @@
     <Compile Include="Packets\FromServer\0x25AddItemToContainer.cs" />
     <Compile Include="Packets\FromServer\0x3CAddMultipleItemsToContainer.cs" />
     <Compile Include="Packets\FromServer\0x6ECharacterAnimation.cs" />
+    <Compile Include="Packets\FromServer\0xA9CharStartingLocation.cs" />
     <Compile Include="Packets\Packet.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UOStream.cs" />

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace UOProxy.Packets.FromServer
+namespace UOProxy.Packets.FromBoth
 {
     public class _0xD6MegaCliloc : Packet
     {
@@ -13,15 +13,21 @@ namespace UOProxy.Packets.FromServer
         public int OwnerID;
         public List<int> ClilocIDs = new List<int>();
         short lengthoftext;
+        public List<int> RequestedItems = new List<int>();
         //public List<string> TextToAdd = new List<string>();
 
         public _0xD6MegaCliloc(UOStream Data)
             : base(Data)
         {
-
-
             length = Data.ReadShort();
             unknown1 = Data.ReadShort();
+            if (unknown1 != 0x0001)
+            {
+                this.Data.Position -= 2;
+                for (int i = 0; i < length - 3 / 4; i++)
+                    RequestedItems.Add(Data.ReadInt());
+                return;
+            }
             Serial = Data.ReadInt();
             unknown2 = Data.ReadShort();
             OwnerID = Data.ReadInt();
@@ -46,6 +52,13 @@ namespace UOProxy.Packets.FromServer
             }
                   //TODO FINISH THIS     
             
+        }
+
+        public _0xD6MegaCliloc(int[] serials) : base(0xD6)
+        {
+            Data.WriteShort((short)((serials.Count() * 4) + 3));
+            foreach (int i in serials)
+                Data.WriteInt(i);
         }
     }
 }

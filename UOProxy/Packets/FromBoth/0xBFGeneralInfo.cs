@@ -16,6 +16,10 @@ namespace UOProxy.Packets.FromBoth
             SubCommand = Data.ReadShort();
             switch (SubCommand)
             {
+                case 4:
+                    int gumpID = Data.ReadInt();
+                    int buttonID = Data.ReadInt();
+                    break;
                 case 0x22:
                     Data.ReadShort();// Unknown short;
                     int Serial = Data.ReadInt();

@@ -7,16 +7,16 @@ namespace UOProxy.Packets.FromClient
 {
     public class _0x06DoubleClick : Packet
     {
-        public int ID;
+        public int Serial;
         public _0x06DoubleClick(UOStream data) : base(data)
         {
-            this.ID = data.ReadInt();          
+            this.Serial = data.ReadInt();          
         }
 
-        public _0x06DoubleClick(int ID)
+        public _0x06DoubleClick(int Serial)
             : base(0x06)
-        {   
-            Data.WriteInt(ID);
+        {
+            Data.WriteInt(Serial);
         }
     }
 }

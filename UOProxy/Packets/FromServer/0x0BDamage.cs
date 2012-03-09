@@ -7,12 +7,12 @@ namespace UOProxy.Packets.FromServer
 {
     public class _0x0BDamage : Packet
     {
-        public int ID;
+        public int Serial;
         public short DamageDealt;
         public _0x0BDamage(UOStream Data)
             : base(Data)
         {
-            ID = Data.ReadInt();
+            Serial = Data.ReadInt();
             DamageDealt = Data.ReadShort();
             
         }

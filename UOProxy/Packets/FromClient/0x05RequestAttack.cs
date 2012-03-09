@@ -8,15 +8,16 @@ namespace UOProxy.Packets.FromClient
 
         public class _0x05RequestAttack : Packet
     {
-        public int ID;
+        public int TargetSerial;
         public _0x05RequestAttack(UOStream data) : base(data)
         {
-               this.ID = data.ReadInt();         
+               this.TargetSerial = data.ReadInt();         
         }
 
-        public _0x05RequestAttack(int ID) : base(0x05)
-        {            
-            Data.WriteInt(ID);
+        public _0x05RequestAttack(int TargetSerial)
+            : base(0x05)
+        {
+            Data.WriteInt(TargetSerial);
         }
     }
 }

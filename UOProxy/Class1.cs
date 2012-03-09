@@ -23,6 +23,7 @@ using System.Net.Sockets;
 using System.Net;
 using System.Threading;
 using UOProxy.Packets.FromServer;
+using UOProxy.Packets;
 
 namespace UOProxy
 {
@@ -65,12 +66,17 @@ namespace UOProxy
             
         }
 
-
+        public TcpClient Server;
+        public void SendToServer(Packet p)
+        {
+            this.Server.GetStream().Write(p.Data.ToArray(), 0, (int)p.Data.Length);
+            this.Server.GetStream().Flush();
+        }
         private void HandleClientCom(object Client)
         {
             TcpClient client = (TcpClient)Client;
             NetworkStream ClientStream = client.GetStream();
-            TcpClient Server = ConnectToServer("69.162.65.42", 2593, client);
+            Server = ConnectToServer("69.162.65.42", 2593, client);
             byte[] data = new byte[4096];
             while (client.Connected)
             {

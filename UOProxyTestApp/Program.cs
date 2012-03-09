@@ -18,9 +18,16 @@ namespace UOProxyTestApp
             proxy._0xB0SendGumpMenuDialog += new UOProxy.UOProxy.SendGumpMenuDialogEventHandler(proxy__0xB0SendGumpMenuDialog);
             proxy._0x77UpdatePlayer += new UOProxy.UOProxy.UpdatePlayerEventHandler(proxy__0x77UpdatePlayer);
             proxy.Client_0xB1GumpMenuSelection += new UOProxy.UOProxy.GumpMenuSelectionEventHandler(proxy__0xB1GumpMenuSelection);
+            proxy._0xDDCompressedGump += proxy__0xDDCompressedGump;
             while (true)
             {
                 Thread.Sleep(5);
+                if (Console.KeyAvailable)
+                {
+                    var key = Console.ReadKey(false);
+                    if (key.Key == ConsoleKey.Escape)
+                        break;
+                }
                 if (UOProxy.Logger.MsgLog.Count >= 1)
                 {
                     lock (UOProxy.Logger.MsgLog)
@@ -37,6 +44,11 @@ namespace UOProxyTestApp
             UOProxy.Logger.SaveLog();
         }
 
+        static void proxy__0xDDCompressedGump(UOProxy.Packets.FromServer._0xDDCompressedGump e)
+        {
+            Console.WriteLine(e.ToString());
+        }
+
         
 
         static void proxy__0xB1GumpMenuSelection(UOProxy.Packets.FromClient._0xB1GumpMenuSelection e)
@@ -51,7 +63,7 @@ namespace UOProxyTestApp
 
         static void proxy__0xB0SendGumpMenuDialog(UOProxy.Packets.FromServer._0xB0SendGumpMenuDialog e)
         {
-            Console.WriteLine(e.ToString());
+            //Console.WriteLine(e.ToString());
         }
 
         static void proxy__0x8CConnectToGameServer(UOProxy.Packets.FromServer._0x8CConnectToGameServer e)
@@ -68,12 +80,12 @@ namespace UOProxyTestApp
 
         static void proxy_EventObjectInfo(UOProxy.Packets.FromServer._0x1AObjectInfo e)
         {
-            Console.WriteLine(e.ToString());
+            //Console.WriteLine(e.ToString());
         }
 
         static void proxy_EventUpdatePlayer(UOProxy.Packets.FromServer._0x77UpdatePlayer e)
         {
-            Console.WriteLine(e.ToString());
+            //Console.WriteLine(e.ToString());
         }
 
 

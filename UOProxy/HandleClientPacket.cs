@@ -44,6 +44,9 @@ namespace UOProxy
         public event SingleClickEventHandler Client_0x09SingleClick;
         public delegate void SingleClickEventHandler(Packets.FromClient._0x09SingleClick e);
 
+        public event LoginCharacterEventHandler Client_0x5DLoginCharacter;
+        public delegate void LoginCharacterEventHandler(Packets.FromClient._0x5DLoginCharacter e);
+
         public event LoginRequestEventHandler Client_0x80LoginRequest;
         public delegate void LoginRequestEventHandler(Packets.FromClient._0x80LoginRequest e);
 
@@ -65,6 +68,9 @@ namespace UOProxy
             HandlersClient.Add(0x07, typeof(Packets.FromClient._0x07PickUpItem));
             HandlersClient.Add(0x08, typeof(Packets.FromClient._0x08DropItem));
             HandlersClient.Add(0x09, typeof(Packets.FromClient._0x09SingleClick));
+            HandlersClient.Add(0x12, typeof(Packets.FromClient._0x12RequestSkillUse));
+            HandlersClient.Add(0x34, typeof(Packets.FromClient._0x34GetPlayerStatus));
+            HandlersClient.Add(0x5d, typeof(Packets.FromClient._0x5DLoginCharacter));
             HandlersClient.Add(0x80, typeof(Packets.FromClient._0x80LoginRequest));
             HandlersClient.Add(0x91, typeof(Packets.FromClient._0x91GameServerLogin));
             HandlersClient.Add(0xA0, typeof(Packets.FromClient._0xA0SelectServer));
@@ -76,6 +82,7 @@ namespace UOProxy
             HandlersClient.Add(0x73, typeof(Packets.FromBoth._0x73Ping));
             HandlersClient.Add(0xBD, typeof(Packets.FromBoth._0xBDClientVersion));
             HandlersClient.Add(0xC8, typeof(Packets.FromBoth._0xC8ClientViewRange));
+            HandlersClient.Add(0xD6, typeof(Packets.FromBoth._0xD6MegaCliloc));
             HandlersClient.Add(0xBF, typeof(Packets.FromBoth._0xBFGeneralInfo));
             
         }

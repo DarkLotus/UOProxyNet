@@ -74,14 +74,23 @@ namespace UOProxy
         public event AddMultipleItemsToContainerEventHandler _0x3CAddMultipleItemsToContainer;
         public delegate void AddMultipleItemsToContainerEventHandler(_0x3CAddMultipleItemsToContainer e);
 
+        public event LoginCompleteEventHandler _0x55LoginComplete;
+        public delegate void LoginCompleteEventHandler(_0x55LoginComplete e);
+
         public event PingEventHandler _0x73Ping;
         public delegate void PingEventHandler(Packets.FromBoth._0x73Ping e);
 
         public event UpdatePlayerEventHandler _0x77UpdatePlayer;
         public delegate void UpdatePlayerEventHandler(_0x77UpdatePlayer e);
 
+        public event DrawObjectEventHandler _0x78DrawObject;
+        public delegate void DrawObjectEventHandler(_0x78DrawObject e);
+
         public event ConnectToGameServerEventHandler _0x8CConnectToGameServer;
         public delegate void ConnectToGameServerEventHandler(_0x8CConnectToGameServer e);
+
+        public event GumpTextEntryDialogEventHandler _0xABGumpTextEntryDialog;
+        public delegate void GumpTextEntryDialogEventHandler(_0xABGumpTextEntryDialog e);
 
         public event UnicodeSpeechEventHandler _0xAEUnicodeSpeech;
         public delegate void UnicodeSpeechEventHandler(_0xAEUnicodeSpeech e);
@@ -120,10 +129,12 @@ namespace UOProxy
             HandlersClient.Clear();
             HandlersServer.Add(0x22, typeof(Packets.FromBoth._0x22MoveAck));
             HandlersServer.Add(0x6c, typeof(Packets.FromBoth._0x6CTargetCursorCommands));
+            HandlersServer.Add(0x72, typeof(Packets.FromBoth._0x72RequestWarMode));
             HandlersServer.Add(0x73, typeof(Packets.FromBoth._0x73Ping));
             HandlersServer.Add(0xBD, typeof(Packets.FromBoth._0xBDClientVersion));
             HandlersServer.Add(0xBF, typeof(Packets.FromBoth._0xBFGeneralInfo));
             HandlersServer.Add(0xC8, typeof(Packets.FromBoth._0xC8ClientViewRange));
+            HandlersServer.Add(0xD6, typeof(Packets.FromBoth._0xD6MegaCliloc));
 
             HandlersServer.Add(0x0B, typeof(Packets.FromServer._0x0BDamage));
             HandlersServer.Add(0x11, typeof(Packets.FromServer._0x11StatusBarInfo));
@@ -141,15 +152,22 @@ namespace UOProxy
             HandlersServer.Add(0x3c, typeof(Packets.FromServer._0x3CAddMultipleItemsToContainer));
             HandlersServer.Add(0x4E, typeof(Packets.FromServer._0x4EPersonalLightLevel));
             HandlersServer.Add(0x4F, typeof(Packets.FromServer._0x4FOverallLightLevel));
+            HandlersServer.Add(0x54, typeof(Packets.FromServer._0x54PlaySoundEffect));
+            HandlersServer.Add(0x55, typeof(Packets.FromServer._0x55LoginComplete));
+            HandlersServer.Add(0x5B, typeof(Packets.FromServer._0x5BTime));
             HandlersServer.Add(0x6E, typeof(Packets.FromServer._0x6ECharacterAnimation));
             HandlersServer.Add(0x77, typeof(Packets.FromServer._0x77UpdatePlayer));
+            HandlersServer.Add(0x78, typeof(Packets.FromServer._0x78DrawObject));
+            HandlersServer.Add(0x88, typeof(Packets.FromServer._0x88OpenPaperDoll));
             HandlersServer.Add(0x8c, typeof(Packets.FromServer._0x8CConnectToGameServer));
             HandlersServer.Add(0xA9, typeof(Packets.FromServer._0xA9CharStartingLocation));
+            HandlersServer.Add(0xAB, typeof(Packets.FromServer._0xABGumpTextEntryDialog));
             HandlersServer.Add(0xAE, typeof(Packets.FromServer._0xAEUnicodeSpeech));
             HandlersServer.Add(0xB0, typeof(Packets.FromServer._0xB0SendGumpMenuDialog));
             HandlersServer.Add(0xB9, typeof(Packets.FromServer._0xB9EnableLockedClientFeatures));
+            HandlersServer.Add(0xBC, typeof(Packets.FromServer._0xBCSeasonalInfo));
             HandlersServer.Add(0xC1, typeof(Packets.FromServer._0xC1ClilocMessage));
-            HandlersServer.Add(0xD6, typeof(Packets.FromServer._0xD6MegaCliloc));
+            
             HandlersServer.Add(0xDC, typeof(Packets.FromServer._0xDCSERevision));
             HandlersServer.Add(0xDD, typeof(Packets.FromServer._0xDDCompressedGump));
             HandlersServer.Add(0xDE, typeof(Packets.FromServer._0xDEUpdateMobileStatus));

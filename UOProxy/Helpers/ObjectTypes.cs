@@ -52,5 +52,43 @@ namespace UOProxy.Helpers
             this.ContainerSerial = packet.ContainerSerial;
             this.Hue = packet.Hue;
         }
+
+    }
+    public class Serial 
+    {
+        public Serial(int serial)
+        { }
+        public Serial(string serial)
+        { }
+        public static uint EUOToInt(String val)
+        //Code by BtbN
+        {
+            val = val.ToUpper(); // Important!
+
+            uint num = 0;
+
+            for (int p = val.Length - 1; p >= 0; p--)
+                num = num * 26 + (((uint)val[p]) - 65);
+
+            num = (num - 7) ^ 0x45;
+
+            return num;
+        }
+        public static string IntToEUO(int num)
+        //Code by BtbN
+        {
+            num = (num ^ 0x45) + 7;
+
+            String res = "";
+
+            do
+            {
+                res += (Char)(65 + (num % 26));
+                num /= 26;
+            } while (num >= 1);
+
+            return res;
+        }
+
     }
 }

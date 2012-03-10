@@ -20,7 +20,7 @@ namespace UOProxy.Packets.FromClient
         public _0x34GetPlayerStatus(int Serial,RequestType reqtype)
             : base(0x34)
         {
-            Data.WriteInt(0xedededed);
+            Data.WriteUInt(0xedededed);
             Data.WriteBit((byte)reqtype);
             Data.WriteInt(Serial);
         }

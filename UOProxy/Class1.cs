@@ -72,6 +72,17 @@ namespace UOProxy
             this.Server.GetStream().Write(p.Data.ToArray(), 0, (int)p.Data.Length);
             this.Server.GetStream().Flush();
         }
+
+        public void SendToServer(byte[] p)
+        {
+            this.Server.GetStream().Write(p, 0, (int)p.Length);
+            this.Server.GetStream().Flush();
+        }
+        public void SendToServer(byte[] p,int length)
+        {
+            this.Server.GetStream().Write(p, 0, length);
+            this.Server.GetStream().Flush();
+        }
         private void HandleClientCom(object Client)
         {
             TcpClient client = (TcpClient)Client;
@@ -94,8 +105,9 @@ namespace UOProxy
                    
                 
                 //Todo parse packet stream, ability to filter certain packet.
-                Server.GetStream().Write(data, 0, bytesRead);
-                Server.GetStream().Flush();
+                    SendToServer(data, bytesRead);
+                //Server.GetStream().Write(data, 0, bytesRead);
+                //Server.GetStream().Flush();
             }
             if(Server.Connected)
             Server.Close();

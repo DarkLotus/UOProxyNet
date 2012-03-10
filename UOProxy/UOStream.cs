@@ -40,33 +40,36 @@ namespace UOProxy
         {
 
         }
-        public void WriteInt(int Value)
+        public void WriteInt(int value)
         {
-            byte[] data = new byte[4];
-            data = BitConverter.GetBytes(Value);
-            this.Write(data, 0, 4);
+            byte[] _buffer = new byte[4];
+            _buffer[0] = (byte)(value >> 24);
+            _buffer[1] = (byte)(value >> 16);
+            _buffer[2] = (byte)(value >> 8);
+            _buffer[3] = (byte)value;
+            this.Write(_buffer, 0, 4);
         }
-        public void WriteInt(uint Value)
+
+        public void WriteUInt(uint value)
         {
-            byte[] data = new byte[4];
-            data = BitConverter.GetBytes(Value);
-            this.Write(data, 0, 4);
-        }
-        public void WriteUInt(uint Value)
-        {
-            byte[] data = new byte[4];
-            data = BitConverter.GetBytes(Value);
-            this.Write(data, 0, 4);
+            byte[] _buffer = new byte[4];
+            _buffer[0] = (byte)(value >> 24);
+            _buffer[1] = (byte)(value >> 16);
+            _buffer[2] = (byte)(value >> 8);
+            _buffer[3] = (byte)value;
+            this.Write(_buffer, 0, 4);
         }
         public void WriteBit(byte Value)
         {
             this.Write(new byte[] { Value }, 0, 1);
         }
-        public void WriteShort(short Value)
+        public void WriteShort(short value)
         {
-            byte[] data = new byte[2];
-            data = BitConverter.GetBytes(Value);
-            this.Write(data, 0, 2);
+            byte[] _buffer = new byte[2];
+            _buffer[0] = (byte)(value >> 8);
+            _buffer[1] = (byte)value;
+
+            this.Write(_buffer, 0, 2);
         }
         public void WriteString(string Value,int RequiredLength)
         {
@@ -94,7 +97,11 @@ namespace UOProxy
             byte[] results = new byte[4]; this.Read(results, 0, 4);
             return (int)((results[0] << 24 | results[1] << 16) | (results[2] << 8) | results[3]);
         }
-
+        public uint ReadUInt()
+        {
+            byte[] results = new byte[4]; this.Read(results, 0, 4);
+            return (uint)((results[0] << 24 | results[1] << 16) | (results[2] << 8) | results[3]);
+        }
         public byte ReadBit()
         {
             byte[] results = new byte[1]; this.Read(results, 0, 1);

@@ -47,8 +47,8 @@ namespace UOProxy
         public event LoginCharacterEventHandler Client_0x5DLoginCharacter;
         public delegate void LoginCharacterEventHandler(Packets.FromClient._0x5DLoginCharacter e);
 
-        public event TargetCursorCommandsEventHandler Client_0x6CTargetCursorCommands;
-        public delegate void TargetCursorCommandsEventHandler(Packets.FromBoth._0x6CTargetCursorCommands e);
+        public event ClientTargetCursorCommandsEventHandler Client_0x6CTargetCursorCommands;
+        public delegate void ClientTargetCursorCommandsEventHandler(Packets.FromBoth._0x6CTargetCursorCommands e);
 
         public event LoginRequestEventHandler Client_0x80LoginRequest;
         public delegate void LoginRequestEventHandler(Packets.FromClient._0x80LoginRequest e);

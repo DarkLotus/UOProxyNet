@@ -74,7 +74,7 @@ namespace UOProxy.Helpers
 
             return num;
         }
-        public static string IntToEUO(int num)
+        public static string IntToEUO(uint num)
         //Code by BtbN
         {
             num = (num ^ 0x45) + 7;

@@ -77,6 +77,9 @@ namespace UOProxy
         public event LoginCompleteEventHandler _0x55LoginComplete;
         public delegate void LoginCompleteEventHandler(_0x55LoginComplete e);
 
+        public event TargetCursorCommandsEventHandler _0x6CTargetCursorCommands;
+        public delegate void TargetCursorCommandsEventHandler(_0x6CTargetCursorCommands e);
+
         public event PingEventHandler _0x73Ping;
         public delegate void PingEventHandler(Packets.FromBoth._0x73Ping e);
 

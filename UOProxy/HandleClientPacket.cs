@@ -47,6 +47,9 @@ namespace UOProxy
         public event LoginCharacterEventHandler Client_0x5DLoginCharacter;
         public delegate void LoginCharacterEventHandler(Packets.FromClient._0x5DLoginCharacter e);
 
+        public event TargetCursorCommandsEventHandler Client_0x6CTargetCursorCommands;
+        public delegate void TargetCursorCommandsEventHandler(Packets.FromBoth._0x6CTargetCursorCommands e);
+
         public event LoginRequestEventHandler Client_0x80LoginRequest;
         public delegate void LoginRequestEventHandler(Packets.FromClient._0x80LoginRequest e);
 
@@ -90,39 +93,48 @@ namespace UOProxy
         {
             UOStream Data = new UOStream(data);
             Packet packet;
-            if (HandlersClient.ContainsKey(data[0]))
+            while (Data.Position < Data.Length - 1)
             {
-                packet = (Packet)Activator.CreateInstance(HandlersClient[data[0]], new object[] { Data });
-                //Logger.Log(packet.ToString() + "Handled");
-                var eventinfo = this.GetType().GetField("Client" + packet.GetType().Name, BindingFlags.Instance
-                    | BindingFlags.NonPublic);
-
-                if (eventinfo != null)
+                if (HandlersClient.ContainsKey(Data.PeekBit()))
                 {
-                    var member = eventinfo.GetValue(this);
-                    if (member != null)
+                    packet = (Packet)Activator.CreateInstance(HandlersClient[Data.PeekBit()], new object[] { Data });
+                    Logger.Log(packet.OpCode.ToString("x") + "  Handled");
+                    var eventinfo = this.GetType().GetField("Client" + packet.GetType().Name, BindingFlags.Instance
+                        | BindingFlags.NonPublic);
+
+                    if (eventinfo != null)
                     {
-                        //Logger.Log(member.ToString());
-                        member.GetType().GetMethod("Invoke").Invoke(member, new object[] { packet });
+                        var member = eventinfo.GetValue(this);
+                        if (member != null)
+                        {
+                            //Logger.Log(member.ToString());
+                            member.GetType().GetMethod("Invoke").Invoke(member, new object[] { packet });
+                        }
+                        else
+                        {
+                            //Logger.Log("MEMBER WAS NULL FOR EVENT: " + eventinfo.Name);
+                        }
+
                     }
                     else
                     {
-                        //Logger.Log("MEMBER WAS NULL FOR EVENT: " + eventinfo.Name);
+                        // Logger.Log("EVENTFIELD WAS NULL FOR PACKET : " + packet.ToString());
                     }
+                    /*if (data[0] == 0x8c)
+                    { UOProxy.UseHuffman = true; }*/
 
+                    if (Data.Position < Data.Length)
+                    {
+                        Logger.Log("Buffer contains data after parsing");
+                    }
                 }
                 else
                 {
-                   // Logger.Log("EVENTFIELD WAS NULL FOR PACKET : " + packet.ToString());
+                    Logger.Log(data[0].ToString("x") + "No Client Handler DIScarding");
+                    break;
                 }
-                /*if (data[0] == 0x8c)
-                { UOProxy.UseHuffman = true; }*/
-                return;
             }
-            else
-            {
-                    Logger.Log(data[0].ToString("x") + "No Client Handler");
-            }
+
         }
     }
 }

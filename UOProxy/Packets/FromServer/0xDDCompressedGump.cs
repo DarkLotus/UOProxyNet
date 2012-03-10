@@ -9,8 +9,8 @@ namespace UOProxy.Packets.FromServer
     public class _0xDDCompressedGump : Packet
     {
         short length_;
-        public int PlayerID;
-        public int GumpID, X, Y;
+        public int GumpID;
+        public int GumpType, X, Y;
 
         int compressedGumpLength, decompressedGumpLength;
 
@@ -21,8 +21,8 @@ namespace UOProxy.Packets.FromServer
             try
             {
                 length_ = Data.ReadShort();
-                PlayerID = Data.ReadInt();
                 GumpID = Data.ReadInt();
+                GumpType = Data.ReadInt();
                 X = Data.ReadInt();
                 Y = Data.ReadInt();
                 compressedGumpLength = Data.ReadInt() - 4;

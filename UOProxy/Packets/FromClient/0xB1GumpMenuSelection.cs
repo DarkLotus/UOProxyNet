@@ -9,7 +9,7 @@ namespace UOProxy.Packets.FromClient
     public class _0xB1GumpMenuSelection : Packet
     {
         short length;
-        public int ID, GumpID, ButtonID, SwitchCount, TextCount;
+        public int GumpID, GumpType, ButtonID, SwitchCount, TextCount;
         public List<int> SwitchID = new List<int>();
         public List<short> TextID = new List<short>();
         public List<short> TextLength = new List<short>();
@@ -19,9 +19,9 @@ namespace UOProxy.Packets.FromClient
             : base(Data)
             {
              length = Data.ReadShort();
-               
-             ID = Data.ReadInt();
+
              GumpID = Data.ReadInt();
+             GumpType = Data.ReadInt();
              ButtonID = Data.ReadInt();
              SwitchCount = Data.ReadInt();
              if (SwitchCount > 0)

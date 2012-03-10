@@ -77,15 +77,17 @@ namespace UOProxy
             TcpClient client = (TcpClient)Client;
             NetworkStream ClientStream = client.GetStream();
             Server = ConnectToServer("69.162.65.42", 2593, client);
-            byte[] data = new byte[4096];
+            byte[] tempdata = new byte[4096];
             while (client.Connected)
             {
-                Thread.Sleep(5);
+                Thread.Sleep(1);
                 //Message pump for comm from/to client
                 
                 if (client.Available <= 0)
                     continue;
-                int bytesRead = ClientStream.Read(data, 0, client.Available);
+                int bytesRead = ClientStream.Read(tempdata, 0, client.Available);
+                byte[] data = new byte[bytesRead];
+                Array.Copy(tempdata, data, bytesRead);
                     //Logger.Log("From Client: " + BitConverter.ToString(data, 0, bytesRead));
                     HandleClientPacket(data, bytesRead);
                 

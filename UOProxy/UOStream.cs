@@ -46,7 +46,12 @@ namespace UOProxy
             data = BitConverter.GetBytes(Value);
             this.Write(data, 0, 4);
         }
-
+        public void WriteInt(uint Value)
+        {
+            byte[] data = new byte[4];
+            data = BitConverter.GetBytes(Value);
+            this.Write(data, 0, 4);
+        }
         public void WriteUInt(uint Value)
         {
             byte[] data = new byte[4];
@@ -95,6 +100,14 @@ namespace UOProxy
             byte[] results = new byte[1]; this.Read(results, 0, 1);
             return results[0];
         }
+
+        public byte PeekBit()
+        {
+            byte[] results = new byte[1]; this.Read(results, 0, 1);
+            this.Position--;
+            return results[0];
+        }
+
 
         public byte[] ReadBytes(int NumToRead)
         {

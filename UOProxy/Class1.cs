@@ -36,6 +36,7 @@ namespace UOProxy
         //When using as a proxy, Call this method, Starts listening for local client connection, once client connects, sends connect to Server
         public bool StartListeningForClient(int port)
         {
+
             try
             {
                 SetupHandlers();

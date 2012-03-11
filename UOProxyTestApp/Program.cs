@@ -19,6 +19,7 @@ namespace UOProxyTestApp
             proxy._0x77UpdatePlayer += new UOProxy.UOProxy.UpdatePlayerEventHandler(proxy__0x77UpdatePlayer);
             proxy.Client_0xB1GumpMenuSelection += new UOProxy.UOProxy.GumpMenuSelectionEventHandler(proxy__0xB1GumpMenuSelection);
             proxy._0xDDCompressedGump += proxy__0xDDCompressedGump;
+
             while (true)
             {
                 Thread.Sleep(5);
@@ -43,6 +44,7 @@ namespace UOProxyTestApp
             }
             UOProxy.Logger.SaveLog();
         }
+
 
         static void proxy__0xDDCompressedGump(UOProxy.Packets.FromServer._0xDDCompressedGump e)
         {

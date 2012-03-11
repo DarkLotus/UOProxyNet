@@ -74,7 +74,7 @@ namespace UOProxy
         public void WriteString(string Value,int RequiredLength)
         {
             //RequiredLength 0 if you dont need padding.
-            System.Text.UnicodeEncoding encoding = new System.Text.UnicodeEncoding();
+            System.Text.UTF8Encoding encoding = new System.Text.UTF8Encoding();
             if (RequiredLength == 0)
             {
                 byte[] Data = encoding.GetBytes(Value);
@@ -87,9 +87,9 @@ namespace UOProxy
                 {
                     Data[i] = 0x00;
                 }
-                if(Data.Length < RequiredLength)
+                if(Data.Length <= RequiredLength)
                      encoding.GetBytes(Value).CopyTo(Data,0);
-                
+                this.Write(Data, 0, Data.Length);
             }
         }
         public int ReadInt()

@@ -22,6 +22,7 @@ namespace UOProxy.Packets.FromClient
             Data.WriteString(accountname, 30);
             Data.WriteString(password, 30);
             Data.WriteBit(key);
+            Data.Position = 0;
         }
     }
 }

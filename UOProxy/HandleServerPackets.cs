@@ -228,9 +228,6 @@ namespace UOProxy
                     {
                         //Logger.Log("EVENTFIELD WAS NULL FOR PACKET : " + packet.ToString());
                     }
-                    /*if (data[0] == 0x8c)
-                    { UOProxy.UseHuffman = true; }
-                    return;*/
                 }
                 else
                 {
@@ -247,73 +244,10 @@ namespace UOProxy
             }
             
             return;
-            while (Data.Position < Data.Length)
-            {
-               
-                }
-                /*switch (data[0])
-                {
-                    case OpCode.SMSG_Damage:
-                        packet = new _0x0BDamage(Data);
-                        if (EventDamage != null)
-                            EventDamage((_0x0BDamage)packet);
-                        break;
-                    
-                    case OpCode.SMSG_StatusBarInfo:
-                        packet = new _0x11StatusBarInfo(Data);
-                        if (EventStatusBarInfo != null)
-                            EventStatusBarInfo((_0x11StatusBarInfo)packet);
-                        break;
-
-                    case OpCode.SMSG_ObjectInfo:
-                        packet = new _0x1AObjectInfo(Data);
-                        if (EventObjectInfo != null)
-                            EventObjectInfo((_0x1AObjectInfo)packet);
-                        break;
-
-                    case OpCode.SMSG_SendSpeach:
-                        packet = new _0x1CSendSpeech(Data);
-                        if (EventSendSpeech != null)
-                            EventSendSpeech((_0x1CSendSpeech)packet);
-                        break;
-                    case OpCode.SMSG_MobAttribute:
-                        packet = new _0x2DMobAttributes(Data);
-                        if (EventMobAttribute != null)
-                            EventMobAttribute((_0x2DMobAttributes)packet);
-                        break;
-
-                    case OpCode.SMSG_UpdatePlayer:
-                        packet = new _0x77UpdatePlayer(Data);
-                        if (EventUpdatePlayer != null)
-                            EventUpdatePlayer((_0x77UpdatePlayer)packet);
-                        break;
-                    case OpCode.SMSG_ConnectToGameServer:
-                        packet = new _0x8CConnectToGameServer(Data);
-                        //if (EventConnectToGameServer != null)
-                        //    EventConnectToGameServer((_0x8CConnectToGameServer)p);
-                        UOProxy.UseHuffman = true;
-                        break;
-                    default:
-                        Data.Position = Data.Length;
-                        break;
-
-                }
-                /*if (p != null)
-                {
-                    if (client != null) // Send Packet onto client fuck compress it :|
-                        client.GetStream().Write(p.PacketData, 0, p.PacketData.Length);
-                }
-                else
-                {
-                    if (client != null) // Send Packet onto client fuck compress it :|
-                        client.GetStream().Write(data, 0, data.Length);
-                }*/
-              
-
         }
     }
 
-    public static class OpCode
+    /*public static class OpCode
     {
         // Packets sent by client and server
         public const int MSG_CharMoveACK = 0x22;
@@ -407,5 +341,5 @@ namespace UOProxy
         public const int CMSG_GameServerLogin = 0x91;
         public const int CMSG_LoginChar = 0x5D;
         public const int CMSG_ClientVersion = 0xBD;
-    }
+    }*/
 }

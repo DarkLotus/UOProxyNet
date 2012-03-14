@@ -207,9 +207,7 @@ namespace UOProxy
                 }
                 else
                 { 
-                    IncomingQueue.AddRange(data); }
-
-                    
+                    IncomingQueue.AddRange(data); }              
             }
             if(Server.Connected)
             Server.Close();

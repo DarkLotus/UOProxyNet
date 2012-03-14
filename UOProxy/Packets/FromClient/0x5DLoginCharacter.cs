@@ -30,14 +30,18 @@ namespace UOProxy.Packets.FromClient
             
         }
 
-        public _0x5DLoginCharacter(IPAddress seed, int major, int minor, int rev, int proto)
+        public _0x5DLoginCharacter(string Charname,int slot)
             : base(0x5D)
         {
-            Data.Write(seed.GetAddressBytes(), 0, 4);
-            Data.WriteInt(major);
-            Data.WriteInt(minor);
-            Data.WriteInt(rev);
-            Data.WriteInt(proto);
+            Data.WriteUInt(0xedededed);
+            Data.WriteString(Charname, 30);
+            Data.WriteShort(0);
+            Data.WriteInt(0x3F);//clientflags
+            Data.WriteInt(0);//unknown1
+            Data.WriteInt(0);//login count
+            Data.WriteInt(0); Data.WriteInt(0); Data.WriteInt(0); Data.WriteInt(0);//unknown 16
+            Data.WriteInt(slot);// zero based
+            Data.Write(IPAddress.Parse("192.168.2.3").GetAddressBytes(), 0, 4);
         }
     }
 }

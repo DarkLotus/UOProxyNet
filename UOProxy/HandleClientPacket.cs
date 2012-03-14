@@ -122,19 +122,12 @@ namespace UOProxy
                     {
                         // Logger.Log("EVENTFIELD WAS NULL FOR PACKET : " + packet.ToString());
                     }
-                    /*if (data[0] == 0x8c)
-                    { UOProxy.UseHuffman = true; }*/
-
-                    if (Data.Position < Data.Length)
-                    {
-                        //Logger.Log("Buffer contains data after parsing");
-                    }
+                    
                 }
                 else
                 {
                     Logger.Log(Data.PeekBit().ToString("x") + BitConverter.ToString(data, (int)Data.Position, (int)(Data.Length - Data.Position)) + "No Client Handler Discarding");
-                    Data.ReadInt();
-                    //HACK
+                    break;
                 }
             }
             

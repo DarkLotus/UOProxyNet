@@ -8,7 +8,7 @@ namespace UOProxy.Packets.FromServer
 {
     public class _0x1AObjectInfo : Packet
     {
-        public short Length;
+        short _length;
         public int ObjectID;
         public short GraphicID;
 
@@ -28,7 +28,7 @@ namespace UOProxy.Packets.FromServer
         {
             try
             {
-                this.Length = Data.ReadShort();
+                this._length = Data.ReadShort();
                 this.ObjectID = Data.ReadInt();
                 this.GraphicID = Data.ReadShort();
                 if ((ObjectID & 0x80000000) == 0x80000000)

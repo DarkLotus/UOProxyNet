@@ -70,8 +70,10 @@ namespace UOProxy
         public TcpClient Server;
         public void SendToServer(Packet p)
         {
+           
             this.Server.GetStream().Write(p.Data.ToArray(), 0, (int)p.Data.Length);
             this.Server.GetStream().Flush();
+            Logger.Log(BitConverter.ToString(p.PacketData, 0, p.PacketData.Length) + "len: " + p.PacketData.Length + " Sent To Server");
         }
 
         public void SendToServer(byte[] p)
@@ -84,15 +86,94 @@ namespace UOProxy
             this.Server.GetStream().Write(p, 0, length);
             this.Server.GetStream().Flush();
         }
+        private static int ClientSizes(byte op)
+        {
+            switch (op)
+            {
+                case 0x00:
+                    return 104;
+                case 0x02:
+                    return 7;
+                case 0x05:
+                    return 5;
+                case 0x06:
+                    return 5;
+                case 0x07:
+                    return 7;
+                case 0x08:
+                    return 15;
+                case 0x09:
+                    return 5;
+                case 0x13:
+                    return 10;
+                case 0x34:
+                    return 10;
+                case 0x38:
+                    return 7;
+                case 0x5D:
+                    return 73;
+                case 0x80:
+                    return 62;
+                case 0x91:
+                    return 65;
+                case 0xA0:
+                    return 3;
+                case 0xEF:
+                    return 21;
+                default:
+                    return 0;
+            }
+        }
+        private int GetClientPacketSize(byte[] data, int bytesRead)
+        {
+            // need to handle byte packet i guess??
+            if (ClientSizes(data[0]) != 0)
+            {
+                return ClientSizes(data[0]);
+            }
+            else if(bytesRead > 3)
+            {  // Known packet with unknown size or size of 0 try and read size from data[]
+                var tempstream = new UOStream(data);
+                tempstream.ReadBit();
+                return tempstream.ReadShort();
+            }
+            
+             return 0;
+        
+        }
+        private int GetServerPacketSize(byte[] data, int bytesRead)
+        {
+            int size = 0;
+            switch (data[0])
+            {
+                case 0x8C:
+                    size = 11;
+                    break;
+                default:
+                    break;
+            }
+            if (size > 0)
+                return size;
+            else
+            {
+                // no client handler, what to do?
+                var tempstream = new UOStream(data);
+                tempstream.ReadBit();
+                return tempstream.ReadShort();
+            }
+            return 0;
+
+        }
         private void HandleClientCom(object Client)
         {
             TcpClient client = (TcpClient)Client;
             NetworkStream ClientStream = client.GetStream();
             Server = ConnectToServer("69.162.65.42", 2593, client);
             byte[] tempdata = new byte[4096];
+            List<byte> IncomingQueue = new List<byte>();
             while (client.Connected)
             {
-                Thread.Sleep(1);
+                Thread.Sleep(10);
                 //Message pump for comm from/to client
                 
                 if (client.Available <= 0)
@@ -100,18 +181,39 @@ namespace UOProxy
                 int bytesRead = ClientStream.Read(tempdata, 0, client.Available);
                 byte[] data = new byte[bytesRead];
                 Array.Copy(tempdata, data, bytesRead);
+                SendToServer(data, data.Length);
+                if (IncomingQueue.Count > 0)
+                {
+                    IncomingQueue.AddRange(data);
+                    data = IncomingQueue.ToArray();
+                    IncomingQueue = new List<byte>();
+                    bytesRead = data.Length;
+                }
+                if (data.Length > 6)
+                {
+                    if (data[4] == 0x91 && data[0] == data[5])
+                    {
+                        // Client sends goddamm key on its own before sending it again in 0x91, keeping client/server streams seperate only way to do this?
+                        byte[] temp = new byte[data.Length - 4];
+                        Array.Copy(data, 4, temp, 0, data.Length - 4);
+                        data = temp;
+                    }
+                }
+
                     //Logger.Log("From Client: " + BitConverter.ToString(data, 0, bytesRead));
-                    HandleClientPacket(data, bytesRead);
-                
-                   
-                
-                //Todo parse packet stream, ability to filter certain packet.
-                    SendToServer(data, bytesRead);
-                //Server.GetStream().Write(data, 0, bytesRead);
-                //Server.GetStream().Flush();
+                if (data.Length >= GetClientPacketSize(data, data.Length))
+                {
+                    HandleClientPacket(data, data.Length);
+                }
+                else
+                { 
+                    IncomingQueue.AddRange(data); }
+
+                    
             }
             if(Server.Connected)
             Server.Close();
+            Logger.Log("Client Thread Dying");
         }
 
       
@@ -123,28 +225,38 @@ namespace UOProxy
             ClientServer TcpClients = (ClientServer)cliserv;
             HuffmanDecompression Decompressor = new HuffmanDecompression();
             NetworkStream ServerStream = TcpClients.server.GetStream();
-            
+            Server = TcpClients.server;
+            int bytesRead = 0;
             while (TcpClients.server.Connected)
             {
                 //MessagePump from/to Server
-                Thread.Sleep(5);
-                if (TcpClients.server.Available <= 0)
-                    continue;
-                int bytesRead = ServerStream.Read(TempdataBuffer, 0, 8192);
+                Thread.Sleep(10);
+                bytesRead = 0;
+                byte[] data = null;
+                try
+                {
+                    if (TcpClients.server.Available > 0)
+                    {
+                        bytesRead = ServerStream.Read(TempdataBuffer, 0, 8192);
+                        data = new byte[bytesRead];
+                        Array.Copy(TempdataBuffer, 0, data, 0, bytesRead);
+                        if (TcpClients.client != null && UseHuffman && TcpClients.client.Connected)
+                            TcpClients.client.GetStream().Write(data, 0, bytesRead);// this is here so we send uncompressed for now, No compress method
+                    }
 
-                byte[] data = new byte[bytesRead];
-                Array.Copy(TempdataBuffer, 0, data, 0, bytesRead);
-
-                if (TcpClients.client != null && UseHuffman && TcpClients.client.Connected)
-                    TcpClients.client.GetStream().Write(data, 0, bytesRead);// this is here so we send uncompressed for now, No compress method
+                }
+                catch { }
 
                 if (IncomingQueue.Count > 0)
                 {
+                    if(data != null)
                     IncomingQueue.AddRange(data); 
                     data = IncomingQueue.ToArray();
                     IncomingQueue = new List<byte>();
                     bytesRead = data.Length;
                 }
+                if (data == null)
+                    continue;
                 if (UseHuffman)
                 {
                     
@@ -167,18 +279,40 @@ namespace UOProxy
                 }
                 else
                 {
-                    HandlePacketFromServer(data, TcpClients.client);
+
+                    if (data.Length == GetServerPacketSize(data, bytesRead))
+                    {
+                        HandlePacketFromServer(data, TcpClients.client);
+                        if (data[0] == 0x8c)
+                        {
+                            TcpClients.server.Close();
+                        }
+                    }
+                    else if (data.Length > GetServerPacketSize(data, bytesRead) && GetServerPacketSize(data, bytesRead) != 0)
+                    {
+                        byte[] temp = new byte[GetServerPacketSize(data, bytesRead)];
+                        Array.Copy(data, temp, GetServerPacketSize(data, bytesRead));
+                        HandlePacketFromServer(temp, TcpClients.client);
+                        if (temp[0] == 0x8c)
+                        {
+                            TcpClients.server.Close();
+                        }
+                        temp = new byte[data.Length - GetServerPacketSize(data, bytesRead)];
+                        Array.Copy(data, GetServerPacketSize(data, bytesRead), temp, 0, temp.Length);
+                        IncomingQueue.AddRange(temp);
+                    }
+                    else
+                    { IncomingQueue.AddRange(data); }
+                    
                     //Logger.Log("From Server NoHuff: " + BitConverter.ToString(data, 0, bytesRead));
 
                     if (TcpClients.client != null)
                     TcpClients.client.GetStream().Write(data, 0, bytesRead);
-                    if (data[0] == 0x8c)
-                    {
-                        TcpClients.server.Close();
-                    }
+                    
                 }
 
             }
+            Logger.Log("Server Thread Dying Gracefully");
         }
 
        
@@ -188,10 +322,19 @@ namespace UOProxy
         {
             try
             {
-                TcpClient Server = new TcpClient();
-                Server.Connect(IPAddress.Parse(ip), port);
+                SetupHandlers();
+                Helpers.Cliloc Clilocdata = new Helpers.Cliloc();
+                Helpers.Cliloc.LoadStringList("enu");
+                var Server = new TcpClient();
+                IPAddress IP;
+                if (IPAddress.TryParse(ip, out IP))
+                    Server.Connect(IP, port);
+                else
+                Server.Connect(ip, port);
+                
                 Thread ServerComThread = new Thread(new ParameterizedThreadStart(HandleServerCom));
                 ServerComThread.Start(new ClientServer(null, Server));
+                this.Server = Server;
                 return Server;
             }
             catch

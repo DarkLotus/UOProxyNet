@@ -142,7 +142,7 @@ namespace UOProxy
                 sb.Append((char)temp);
             }
             return sb.ToString();
-            return UTF8Encoding.UTF8.GetString(mystring).Replace("\0", "");
+            //return UTF8Encoding.UTF8.GetString(mystring).Replace("\0", "");
         }
         public string ReadNullTermString()
         {

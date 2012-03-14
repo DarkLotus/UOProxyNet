@@ -7,7 +7,7 @@ namespace UOProxy.Packets.FromServer
 {
     public class _0x16StatusBarUpdate : Packet
     {
-        short length;
+        short _length;
         public int ID;
         short Extended;
         public short HealthBarColor;
@@ -15,7 +15,7 @@ namespace UOProxy.Packets.FromServer
         public _0x16StatusBarUpdate(UOStream Data)
             : base(Data)
         {
-            length = Data.ReadShort();
+            _length = Data.ReadShort();
             ID = Data.ReadInt();
             Extended = Data.ReadShort();
             if (Extended != 0x0000)

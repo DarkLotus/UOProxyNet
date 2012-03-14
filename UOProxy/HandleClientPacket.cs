@@ -97,8 +97,10 @@ namespace UOProxy
             {
                 if (HandlersClient.ContainsKey(Data.PeekBit()))
                 {
+                    var olddatapos = Data.Position;
                     packet = (Packet)Activator.CreateInstance(HandlersClient[Data.PeekBit()], new object[] { Data });
-                    Logger.Log(packet.OpCode.ToString("x") + "  Handled");
+                    //Logger.Log(packet.OpCode.ToString("x") + "  Handled from Client ");
+                    Logger.Log(BitConverter.ToString(packet.PacketData, (int)olddatapos, (int)(Data.Position - olddatapos)) + " len:" + (Data.Position - olddatapos) + "  Handled from Client ");
                     var eventinfo = this.GetType().GetField("Client" + packet.GetType().Name, BindingFlags.Instance
                         | BindingFlags.NonPublic);
 
@@ -125,15 +127,17 @@ namespace UOProxy
 
                     if (Data.Position < Data.Length)
                     {
-                        Logger.Log("Buffer contains data after parsing");
+                        //Logger.Log("Buffer contains data after parsing");
                     }
                 }
                 else
                 {
-                    Logger.Log(data[0].ToString("x") + "No Client Handler DIScarding");
-                    break;
+                    Logger.Log(Data.PeekBit().ToString("x") + BitConverter.ToString(data, (int)Data.Position, (int)(Data.Length - Data.Position)) + "No Client Handler Discarding");
+                    Data.ReadInt();
+                    //HACK
                 }
             }
+            
 
         }
     }

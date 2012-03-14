@@ -114,6 +114,7 @@
     <Compile Include="Packets\FromServer\0x5BTime.cs" />
     <Compile Include="Packets\FromServer\0x78DrawObject.cs" />
     <Compile Include="Packets\FromServer\0xBCSeasonalInfo.cs" />
+    <Compile Include="Packets\FromServer\0xA8GameServerList.cs" />
     <Compile Include="Packets\Packet.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UOStream.cs" />

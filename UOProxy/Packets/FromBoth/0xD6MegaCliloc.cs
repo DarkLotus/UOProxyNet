@@ -32,7 +32,7 @@ namespace UOProxy.Packets.FromBoth
             unknown2 = Data.ReadShort();
             OwnerID = Data.ReadInt();
             List<string> Cliocs = new List<string>();
-            while(Data.Position + 6 < Data.Length)
+            while(Data.Position + 6 <= Data.Length)
             {
                 int MessageNumber = Data.ReadInt();
                 short textlen = Data.ReadShort();
@@ -50,6 +50,7 @@ namespace UOProxy.Packets.FromBoth
                    
                 Cliocs.Add(Helpers.Cliloc.Table[MessageNumber].ToString());
             }
+            Data.Position += 4;
                   //TODO FINISH THIS     
             
         }

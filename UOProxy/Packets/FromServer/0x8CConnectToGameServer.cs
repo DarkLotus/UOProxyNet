@@ -14,21 +14,22 @@ namespace UOProxy.Packets.FromServer
         public _0x8CConnectToGameServer(UOStream Data)
             : base(Data)
         {
+            if (UOProxy.ProxyMode)
+            {
+                // If we are in proxy mode, overwrite servers IP with local IP
+                IP = IPAddress.Loopback;
+                Data.Write(_ip,0, 4);
+                UOProxy.UseHuffman = true;
+                Data.Position = 1;
+                //ToDo Add Port override
+            }
             _ip[0] = Data.ReadBit();
             _ip[1] = Data.ReadBit();
             _ip[2] = Data.ReadBit();
             _ip[3] = Data.ReadBit();
             Port = Data.ReadShort();
             Key = Data.ReadInt();
-            if (UOProxy.ProxyMode)
-            {
-                // If we are in proxy mode, overwrite servers IP with local IP
-                IP = IPAddress.Loopback;
-                Data.Position = 1;
-                Data.Write(_ip, 0, 4);
-                UOProxy.UseHuffman = true;
-                //ToDo Add Port override
-            }
+            
             
         }
         public IPAddress IP { get { return new IPAddress(_ip); } private set { _ip = value.GetAddressBytes(); } }

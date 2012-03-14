@@ -7,7 +7,7 @@ namespace UOProxy.Packets.FromServer
 {
     public class _0x11StatusBarInfo : Packet
     {
-        short Length;
+        short _length;
         public int PlayerID;
         public string PlayerName;
         public short HitsCurrent, HitsMax;
@@ -35,7 +35,7 @@ namespace UOProxy.Packets.FromServer
         public _0x11StatusBarInfo(UOStream Data)
             : base(Data)
         {
-            Length = Data.ReadShort();
+            _length = Data.ReadShort();
             PlayerID = Data.ReadInt();
             PlayerName = Data.ReadString(30);
             HitsCurrent = Data.ReadShort();

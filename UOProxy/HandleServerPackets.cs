@@ -92,6 +92,12 @@ namespace UOProxy
         public event ConnectToGameServerEventHandler _0x8CConnectToGameServer;
         public delegate void ConnectToGameServerEventHandler(_0x8CConnectToGameServer e);
 
+        public event GameServerListEventHandler _0xA8GameServerList;
+        public delegate void GameServerListEventHandler(_0xA8GameServerList e);
+
+        public event CharStartingLocationEventHandler _0xA9CharStartingLocation;
+        public delegate void CharStartingLocationEventHandler(_0xA9CharStartingLocation e);
+
         public event GumpTextEntryDialogEventHandler _0xABGumpTextEntryDialog;
         public delegate void GumpTextEntryDialogEventHandler(_0xABGumpTextEntryDialog e);
 
@@ -100,6 +106,9 @@ namespace UOProxy
 
         public event SendGumpMenuDialogEventHandler _0xB0SendGumpMenuDialog;
         public delegate void SendGumpMenuDialogEventHandler(_0xB0SendGumpMenuDialog e);
+
+        public event ClientVersionEventHandler _0xBDClientVersion;
+        public delegate void ClientVersionEventHandler(_0xBDClientVersion e);
 
         public event ClilocMessageEventHandler _0xC1ClilocMessage;
         public delegate void ClilocMessageEventHandler(_0xC1ClilocMessage e);
@@ -163,6 +172,7 @@ namespace UOProxy
             HandlersServer.Add(0x78, typeof(Packets.FromServer._0x78DrawObject));
             HandlersServer.Add(0x88, typeof(Packets.FromServer._0x88OpenPaperDoll));
             HandlersServer.Add(0x8c, typeof(Packets.FromServer._0x8CConnectToGameServer));
+            HandlersServer.Add(0xA8, typeof(Packets.FromServer._0xA8GameServerList));
             HandlersServer.Add(0xA9, typeof(Packets.FromServer._0xA9CharStartingLocation));
             HandlersServer.Add(0xAB, typeof(Packets.FromServer._0xABGumpTextEntryDialog));
             HandlersServer.Add(0xAE, typeof(Packets.FromServer._0xAEUnicodeSpeech));
@@ -189,40 +199,53 @@ namespace UOProxy
                 return;
             }
             Data.Position = 0;
-            if (HandlersServer.ContainsKey(data[0]))
+            while (Data.Position < Data.Length - 1)
             {
-                packet = (Packet)Activator.CreateInstance(HandlersServer[data[0]], new object[] { Data });
-                //Logger.Log(packet.ToString() + "Handled");
-                var eventinfo = this.GetType().GetField(packet.GetType().Name, BindingFlags.Instance
-                    | BindingFlags.NonPublic);
-
-                if (eventinfo != null)
+                if (HandlersServer.ContainsKey(Data.PeekBit()))
                 {
-                    var member = eventinfo.GetValue(this);
-                    if (member != null)
+                    var olddatapos = Data.Position;
+                    packet = (Packet)Activator.CreateInstance(HandlersServer[Data.PeekBit()], new object[] { Data });
+                    //Logger.Log(packet.OpCode.ToString("x") + "  Handled from Server");
+                    Logger.Log(BitConverter.ToString(packet.PacketData, (int)olddatapos, (int)(Data.Position - olddatapos)) + "  Handled from Server");
+                    var eventinfo = this.GetType().GetField(packet.GetType().Name, BindingFlags.Instance
+                        | BindingFlags.NonPublic);
+
+                    if (eventinfo != null)
                     {
-                        //Logger.Log(member.ToString());
-                        member.GetType().GetMethod("Invoke").Invoke(member, new object[] { packet });
+                        var member = eventinfo.GetValue(this);
+                        if (member != null)
+                        {
+                            //Logger.Log(member.ToString());
+                            member.GetType().GetMethod("Invoke").Invoke(member, new object[] { packet });
+                        }
+                        else
+                        {
+                            //Logger.Log("MEMBER WAS NULL FOR EVENT: " + eventinfo.Name);
+                        }
+
                     }
                     else
                     {
-                        //Logger.Log("MEMBER WAS NULL FOR EVENT: " + eventinfo.Name);
+                        //Logger.Log("EVENTFIELD WAS NULL FOR PACKET : " + packet.ToString());
                     }
-
+                    /*if (data[0] == 0x8c)
+                    { UOProxy.UseHuffman = true; }
+                    return;*/
                 }
                 else
                 {
-                    //Logger.Log("EVENTFIELD WAS NULL FOR PACKET : " + packet.ToString());
+                    Logger.Log(Data.PeekBit().ToString("x") + BitConverter.ToString(Data.ToArray(), (int)Data.Position, (int)(Data.Length-Data.Position)) + "No Server Handler");
+                    break;
                 }
-                /*if (data[0] == 0x8c)
-                { UOProxy.UseHuffman = true; }
-                return;*/
+                if (Data.Position < Data.Length)
+                {
+                    byte[] tempdata = new byte[Data.Length - Data.Position];
+                    Array.Copy(Data.ToArray(), Data.Position, tempdata, 0, Data.Length - Data.Position);
+                    Data = new UOStream(tempdata);
+                }
+               
             }
-            else
-            {
- 
-                Logger.Log(data[0].ToString("x") + "No Server Handler");
-            }
+            
             return;
             while (Data.Position < Data.Length)
             {

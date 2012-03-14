@@ -20,6 +20,7 @@ namespace UOProxyTestApp
             proxy.Client_0xB1GumpMenuSelection += new UOProxy.UOProxy.GumpMenuSelectionEventHandler(proxy__0xB1GumpMenuSelection);
             proxy._0xDDCompressedGump += proxy__0xDDCompressedGump;
             proxy.Client_0x80LoginRequest += proxy_Client_0x80LoginRequest;
+            int oldcnt = 0;
             while (true)
             {
                 Thread.Sleep(5);
@@ -29,20 +30,22 @@ namespace UOProxyTestApp
                     if (key.Key == ConsoleKey.Escape)
                         break;
                 }
-                if (UOProxy.Logger.MsgLog.Count >= 1)
+                if (UOProxy.Logger.MsgLog.Count > oldcnt)
                 {
                     lock (UOProxy.Logger.MsgLog)
                     {
-                        foreach (string s in UOProxy.Logger.MsgLog)
+                        for(int i = oldcnt;i < UOProxy.Logger.MsgLog.Count;i++)
                         {
-                            Console.WriteLine(s);
+                            Console.WriteLine(UOProxy.Logger.MsgLog[i]);
                         }
-                        UOProxy.Logger.MsgLog.Clear();
+                        oldcnt = UOProxy.Logger.MsgLog.Count;
+
                     }
 
                 }
             }
             UOProxy.Logger.SaveLog();
+            
         }
 
         static void proxy_Client_0x80LoginRequest(UOProxy.Packets.FromClient._0x80LoginRequest e)
@@ -62,11 +65,11 @@ namespace UOProxyTestApp
 
         static void proxy__0xB1GumpMenuSelection(UOProxy.Packets.FromClient._0xB1GumpMenuSelection e)
         {
-            Console.WriteLine(e.ToString());
+           /* Console.WriteLine(e.ToString());
             string text = BitConverter.ToString(e.Data.ToArray(), 0, (int)e.Data.Length);
             var p = new UOProxy.Packets.FromClient._0xB1GumpMenuSelection(e.GumpID, e.GumpType, e.ButtonID);
             string text2 = BitConverter.ToString(p.Data.ToArray(), 0, (int)p.Data.Length);
-            var pp = new UOProxy.Packets.FromClient._0xB1GumpMenuSelection(p.Data);
+            var pp = new UOProxy.Packets.FromClient._0xB1GumpMenuSelection(p.Data);*/
         }
 
         static void proxy__0x77UpdatePlayer(UOProxy.Packets.FromServer._0x77UpdatePlayer e)

@@ -89,6 +89,45 @@ namespace UOProxy
             HandlersClient.Add(0xBF, typeof(Packets.FromBoth._0xBFGeneralInfo));
             
         }
+
+        private static int ClientSizes(byte op)
+        {
+            switch (op)
+            {
+                case 0x00:
+                    return 104;
+                case 0x02:
+                    return 7;
+                case 0x05:
+                    return 5;
+                case 0x06:
+                    return 5;
+                case 0x07:
+                    return 7;
+                case 0x08:
+                    return 15;
+                case 0x09:
+                    return 5;
+                case 0x13:
+                    return 10;
+                case 0x34:
+                    return 10;
+                case 0x38:
+                    return 7;
+                case 0x5D:
+                    return 73;
+                case 0x80:
+                    return 62;
+                case 0x91:
+                    return 65;
+                case 0xA0:
+                    return 3;
+                case 0xEF:
+                    return 21;
+                default:
+                    return 0;
+            }
+        }
         private void HandleClientPacket(byte[] data, int bytesRead)
         {
             UOStream Data = new UOStream(data);

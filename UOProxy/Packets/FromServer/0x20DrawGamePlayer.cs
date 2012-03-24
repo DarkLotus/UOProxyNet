@@ -7,7 +7,7 @@ namespace UOProxy.Packets.FromServer
 {
     public class _0x20DrawGamePlayer : Packet
     {
-        public int ID;
+        public int Serial;
         public short GraphicID;
         byte unknown1;
         public short Hue;
@@ -17,7 +17,7 @@ namespace UOProxy.Packets.FromServer
         public _0x20DrawGamePlayer(UOStream Data)
             : base(Data)
         {
-            ID = Data.ReadInt();
+            Serial = Data.ReadInt();
             GraphicID = Data.ReadShort();
             unknown1 = Data.ReadBit();
             Hue = Data.ReadShort();

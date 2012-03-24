@@ -8,7 +8,7 @@ namespace UOProxy.Packets.FromServer
 {
     public class _0x77UpdatePlayer : Packet
     {
-        public int PlayerID;
+        public int Serial;
         public short GraphicID;
         public short X,Y;
         public byte Z, Direction;
@@ -19,7 +19,7 @@ namespace UOProxy.Packets.FromServer
         {
             
             this.Data = Data;
-            this.PlayerID = Data.ReadInt();
+            this.Serial = Data.ReadInt();
             this.GraphicID = Data.ReadShort();
             this.X = Data.ReadShort();
             this.Y = Data.ReadShort();

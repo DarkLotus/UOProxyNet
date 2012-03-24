@@ -9,20 +9,20 @@ namespace UOProxy.Packets.FromServer
     {
         short unknown;
         public byte DataType; // 0x00 Item, 0x02 Multi
-        public int ID;
+        public int Serial;
         public short GraphicID;
         public byte Direction; // 0x00 if Multi
         public short Amount, Amount2;// 0x00 if Multi
         public short X, Y;
         public byte Z, Layer; // layer 0x00 if Multi
-        public short Color;// 0x00 if Multi
+        public short Hue;// 0x00 if Multi
         public byte Flag; // 0x20 = Moveable,0x80 = Hidden, 0x00 Multi
         public _0xF3ObjectInfo(UOStream Data)
             : base(Data)
         {
             unknown = Data.ReadShort();
             DataType = Data.ReadBit();
-            ID = Data.ReadInt();
+            Serial = Data.ReadInt();
             GraphicID = Data.ReadShort();
             Direction = Data.ReadBit();
             Amount = Data.ReadShort();
@@ -31,7 +31,7 @@ namespace UOProxy.Packets.FromServer
             Y = Data.ReadShort();
             Z = Data.ReadBit();
             Layer = Data.ReadBit();
-            Color = Data.ReadShort();
+            Hue = Data.ReadShort();
             Flag = Data.ReadBit();
             
         }

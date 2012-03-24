@@ -12,7 +12,6 @@ namespace UOProxy.Packets.FromBoth
         short unknown2;
         public int OwnerID;
         public List<int> ClilocIDs = new List<int>();
-        short lengthoftext;
         public List<int> RequestedItems = new List<int>();
         //public List<string> TextToAdd = new List<string>();
 
@@ -36,11 +35,6 @@ namespace UOProxy.Packets.FromBoth
             {
                 int MessageNumber = Data.ReadInt();
                 short textlen = Data.ReadShort();
-                if (textlen + Data.Position > Data.Length)
-                {
-                    int errorrr = 1;
-                    break;
-                }
 
                 if(textlen > 0)
                 {

@@ -234,11 +234,14 @@ namespace UOProxy
                     Logger.Log(Data.PeekBit().ToString("x") + BitConverter.ToString(Data.ToArray(), (int)Data.Position, (int)(Data.Length-Data.Position)) + "No Server Handler");
                     break;
                 }
-                if (Data.Position < Data.Length)
+                if (Data.Position < Data.Length -1)
                 {
+                    
                     byte[] tempdata = new byte[Data.Length - Data.Position];
                     Array.Copy(Data.ToArray(), Data.Position, tempdata, 0, Data.Length - Data.Position);
                     Data = new UOStream(tempdata);
+                    Logger.Log("IT HAPPENED! Data left after parsing packet" + BitConverter.ToString(tempdata, 0, (int)tempdata.Length));
+                    // this should never happen
                 }
                
             }

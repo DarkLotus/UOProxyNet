@@ -10,7 +10,7 @@ namespace UOProxy.Packets.FromServer
     {
         short _length;
         short _numberOfItems;
-        List<Item> Items = new List<Item>();
+        public List<Item> Items = new List<Item>();
        
         public _0x3CAddMultipleItemsToContainer(UOStream Data)
             : base(Data)
